@@ -1,0 +1,112 @@
+Script started on 2025-04-27 22:05:22-04:00 [TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="201" LINES="21"]
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ nano ~/.bashrc/home/nya1025/logs/2025-04-27-21-58-22.log [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C~/.bashrc[K[Kcd cs6120/final/tests/[K[K[K[K[K[K
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril/cs6120/final[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril/cs6120/final[00m$ turnt test/cycles.brils/cycles.bril
+1..1
+not ok 1 - tests/cycles.bril # differing: tests/cycles.out
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril/cs6120/final[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril/cs6120/final[00m$ turnt tests/cycles.bril[C tests/cycles.bril- tests/cycles.brild tests/cycles.brili tests/cycles.brilf tests/cycles.bril[1P tests/cycles.bril[1P tests/cycles.bril[1P tests/cycles.bril- tests/cycles.brild tests/cycles.brili tests/cycles.brilf tests/cycles.brilf tests/cycles.bril
+1..1
+--- tests/cycles.out	2025-04-27 19:45:46.286913262 -0400
++++ /tmp/tmps05piiwe	2025-04-27 22:11:06.263561044 -0400
+@@ -1,11 +1,12 @@
+ Congruence classes for function main:
+-Class undef_0: ['c.init']
+-Class class_1: ['a.0', 'x.0', 'y.0']
+-Class class_2: ['one.0']
+-Class class_3: ['ten.0']
+-Class class_5: ['not_y.0']
+-Class class_6: ['not_c.0']
+-Class class_7: ['y.1', 'x.1']
+-Class class_8: ['c.0']
+-Class class_9: ['y.2', 'x.2']
+-Class class_10: ['c.1']
++Class undef: ['c.init']
++Class const 0: ['a.0', 'y.0']
++Class const 1: ['one.0']
++Class const 10: ['ten.0']
++Class id: ['x.0']
++Class add: ['not_y.0']
++Class lt: ['not_c.0']
++Class get: ['c.0', 'x.1', 'y.1']
++Class add_new: ['y.2']
++Class id_new: ['x.2']
++Class lt_new: ['c.1']
+not ok 1 - tests/cycles.bril # differing: tests/cycles.out
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril/cs6120/final[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril/cs6120/final[00m$ turnt --diff tests/cycles.bril[Kturnt --diff tests/cycles.bril-.brilh.brila.brilr.brild.bril
+Usage: turnt [OPTIONS] [FILE]...
+Try 'turnt -h' for help.
+
+Error: Invalid value for '[FILE]...': Path 'tests/cycles-hard.bril' does not exist.
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril/cs6120/final[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril/cs6120/final[00m$ turnt --diff tests/cycles-hard.bril[1Phard.bril_hard.bril
+1..1
+--- tests/cycles_hard.out	2025-04-27 19:45:46.396913223 -0400
++++ /tmp/tmpcs_51kqq	2025-04-27 22:13:29.463514905 -0400
+@@ -1,13 +1,13 @@
+ Congruence classes for function main:
+-Class undef_0: ['q.init']
+-Class undef_1: ['p.init']
+-Class undef_2: ['c.init']
+-Class class_3: ['a.0', 'x.0']
+-Class class_4: ['b.0', 'one.0', 'y.0']
+-Class class_5: ['two.0']
+-Class class_6: ['ten.0']
+-Class class_9: ['y.1', 'x.1', 'q.0', 'p.0']
+-Class class_10: ['c.0']
+-Class class_11: ['p.1', 'x.2']
+-Class class_12: ['q.1', 'y.2']
+-Class class_13: ['c.1']
++Class undef: ['c.init', 'q.init', 'p.init']
++Class const 0: ['a.0']
++Class const 1: ['one.0', 'b.0']
++Class const 2: ['two.0']
++Class const 10: ['ten.0']
++Class id: ['x.0']
++Class get: ['x.1', 'c.0', 'y.1', 'p.0', 'q.0']
++Class add: ['p.1']
++Class lt: ['c.1']
++Class id_new: ['y.0']
++Class add_new: ['q.1']
++Class id_new_new: ['y.2']
+not ok 1 - tests/cycles_hard.bril # differing: tests/cycles_hard.out
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril/cs6120/final[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril/cs6120/final[00m$ turnt --diff tests/cycles_hard.bril
+1..1
+--- tests/cycles_hard.out	2025-04-27 19:45:46.396913223 -0400
++++ /tmp/tmpsnepsifs	2025-04-27 22:14:44.643487308 -0400
+@@ -1,13 +1,13 @@
+ Congruence classes for function main:
+-Class undef_0: ['q.init']
+-Class undef_1: ['p.init']
+-Class undef_2: ['c.init']
+-Class class_3: ['a.0', 'x.0']
+-Class class_4: ['b.0', 'one.0', 'y.0']
+-Class class_5: ['two.0']
+-Class class_6: ['ten.0']
+-Class class_9: ['y.1', 'x.1', 'q.0', 'p.0']
+-Class class_10: ['c.0']
+-Class class_11: ['p.1', 'x.2']
+-Class class_12: ['q.1', 'y.2']
+-Class class_13: ['c.1']
++Class undef: ['p.init', 'c.init', 'q.init']
++Class const 0: ['a.0']
++Class const 1: ['one.0']
++Class const 2: ['two.0']
++Class const 10: ['ten.0']
++Class id: ['y.0', 'x.0']
++Class get: ['c.0', 'x.1', 'q.0', 'y.1', 'p.0']
++Class add: ['p.1']
++Class lt: ['c.1']
++Class id_new: ['x.2']
++Class add_new: ['q.1']
++Class id_new_new: ['y.2']
+not ok 1 - tests/cycles_hard.bril # differing: tests/cycles_hard.out
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril/cs6120/final[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril/cs6120/final[00m$ turnt --diff tests/cycles_hard.bril-hard.bril_hard.bril[Kturnt --save tests/*.bril
+1..9
+not ok 1 - tests/aliases.bril # skip: updated tests/aliases.out; differing: tests/aliases.out
+not ok 2 - tests/basic.bril # skip: updated tests/basic.out; differing: tests/basic.out
+not ok 3 - tests/commute.bril # skip: updated tests/commute.out; differing: tests/commute.out
+not ok 4 - tests/control.bril # skip: updated tests/control.out; differing: tests/control.out
+not ok 5 - tests/cycles.bril # skip: updated tests/cycles.out; differing: tests/cycles.out
+not ok 6 - tests/cycles_hard.bril # skip: updated tests/cycles_hard.out; differing: tests/cycles_hard.out
+not ok 7 - tests/sensitivity.bril # skip: updated tests/sensitivity.out; differing: tests/sensitivity.out
+not ok 8 - tests/transitive.bril # skip: updated tests/transitive.out; differing: tests/transitive.out
+not ok 9 - tests/unrelated.bril # skip: updated tests/unrelated.out; differing: tests/unrelated.out
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril/cs6120/final[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril/cs6120/final[00m$ 

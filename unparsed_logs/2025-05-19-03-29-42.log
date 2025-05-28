@@ -1,0 +1,45 @@
+Script started on 2025-05-19 03:29:42-04:00 [TERM="xterm-256color" TTY="/dev/pts/11" COLUMNS="201" LINES="10"]
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git add .
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git commit -m "final com[K[K[K[K[K[K[K[K[Kadd final fles[K[K[Kiles"
+[main 4f3158a] add final files
+ 8 files changed, 640 insertions(+), 607 deletions(-)
+ create mode 100644 final_arr_chart_larger_fonts.png
+ delete mode 100644 src/code/test_chunk.py
+ delete mode 100644 src/code/test_subchunk.py
+ create mode 100644 stepwise_arr_chart.png
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git reset --[K[K--hard
+HEAD is now at 4f3158a add final files
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git reset --hard ~HEAD-1[K[K
+fatal: ambiguous argument '~HEAD': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git reset --hard ~HEAD-1
+fatal: ambiguous argument '~HEAD-1': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git reset --hard ~HEAD-1[K[K~1[1PHEAD~1
+HEAD is now at ca9301a don't use late chunking for now
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git add .
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git add .reset --hard HEAD~1~HEAD-1[K[Kcommit -m "add final files"
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git add .
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git add .commit -m "add final files"
+[main c8028a8] add final files
+ 6 files changed, 641 insertions(+), 609 deletions(-)
+ delete mode 100644 src/code/test_chunk.py
+ delete mode 100644 src/code/test_subchunk.py
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ git push
+Enter passphrase for key '/home/nya1025/.ssh/normal_id': 
+Enumerating objects: 15, done.
+Counting objects:   6% (1/15)Counting objects:  13% (2/15)Counting objects:  20% (3/15)Counting objects:  26% (4/15)Counting objects:  33% (5/15)Counting objects:  40% (6/15)Counting objects:  46% (7/15)Counting objects:  53% (8/15)Counting objects:  60% (9/15)Counting objects:  66% (10/15)Counting objects:  73% (11/15)Counting objects:  80% (12/15)Counting objects:  86% (13/15)Counting objects:  93% (14/15)Counting objects: 100% (15/15)Counting objects: 100% (15/15), done.
+Delta compression using up to 16 threads
+Compressing objects:  12% (1/8)Compressing objects:  25% (2/8)Compressing objects:  37% (3/8)Compressing objects:  50% (4/8)Compressing objects:  62% (5/8)Compressing objects:  75% (6/8)Compressing objects:  87% (7/8)Compressing objects: 100% (8/8)Compressing objects: 100% (8/8), done.
+Writing objects:  12% (1/8)Writing objects:  25% (2/8)Writing objects:  37% (3/8)Writing objects:  50% (4/8)Writing objects:  62% (5/8)Writing objects:  75% (6/8)Writing objects:  87% (7/8)Writing objects: 100% (8/8)Writing objects: 100% (8/8), 9.17 KiB | 2.29 MiB/s, done.
+Total 8 (delta 5), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/5)[Kremote: Resolving deltas:  20% (1/5)[Kremote: Resolving deltas:  40% (2/5)[Kremote: Resolving deltas:  60% (3/5)[Kremote: Resolving deltas:  80% (4/5)[Kremote: Resolving deltas: 100% (5/5)[Kremote: Resolving deltas: 100% (5/5), completed with 5 local objects.[K
+To github.com:LIICornell/MEng-LII-2025-spring.git
+   ca9301a..c8028a8  main -> main
+]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ [K]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ [K]0;nya1025@DESKTOP-C2SGU4R: ~/MEng-LII-2025-spring[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/MEng-LII-2025-spring[00m$ 

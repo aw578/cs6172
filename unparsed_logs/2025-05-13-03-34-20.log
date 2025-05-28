@@ -1,0 +1,176 @@
+Script started on 2025-05-13 03:34:20-04:00 [TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="201" LINES="10"]
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ git checkout main
+Switched to branch 'main'
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ git checkout main
+M	cs6120/final/plot.py
+Already on 'main'
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ git checkout main[Kpython cs6120/final/plot.py 
+/usr/lib/python3/dist-packages/requests/__init__.py:89: RequestsDependencyWarning: urllib3 (2.2.3) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+Traceback (most recent call last):
+  File "cs6120/final/plot.py", line 118, in <module>
+    data2.append(a[0], a[1] + b[1], a[2] + b[2], a[3] + b[3])
+TypeError: append() takes exactly one argument (4 given)
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ python cs6120/final/plot.py 
+Greatest SSA→GVN reduction: 58.295380611581%
+Median SSA→GVN reduction: 1.481565603805226%
+Median base→SSA increase: 74.01908801696713%
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ python cs6120/final/plot.py 
+Greatest SSA→GVN reduction: 58.27242524916944%
+Median SSA→GVN reduction: 1.4925458017741753%
+Median base→SSA increase: 73.4375%
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ python cs6120/final/plot.py 
+Greatest SSA→GVN reduction: 58.27242524916944%
+Median SSA→GVN reduction: 1.4925458017741753%
+Median base→SSA increase: 73.4375%
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ python cs6120/final/plot.py 
+Greatest SSA→GVN reduction: 58.27242524916944%
+Median SSA→GVN reduction: 1.4925458017741753%
+Median base→SSA increase: 73.4375%
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ python cs6120/final/plot.py [11Pgit checkout mainpull[Kls[Kgit pullls[Kgit pullcheckout mainpython cs6120/final/plot.py [Kpython cs6120/final/tests/[K[K[K[K[Kest_sing[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Ksh cs6120/final/tes_[Kt_single.sh examples/ben[K[K[K[K[K[K[K[K[K[K[K[Kbenchmarks/core/delannoy.bril 
+@main(n: int) {
+.b1:
+  v1.0: int = id n;
+  ans.0: int = call @count_path v1.0 v1.0;
+  v3.0: int = id ans.0;
+  print v3.0;
+  v4.0: int = const 0;
+  ret;
+}
+@count_path(x: int, y: int): int {
+.b1:
+  v1.0: int = id x;
+  v2.0: int = const 0;
+  v3.0: bool = eq v1.0 v2.0;
+  br v3.0 .then.0 .else.0;
+.then.0:
+  v11.0: int = const 1;
+  ret v11.0;
+.else.0:
+  v13.0: int = id y;
+  v8.0: bool = eq v13.0 v2.0;
+  br v8.0 .then.5 .else.5;
+.then.5:
+  v11.0: int = const 1;
+  ret v11.0;
+.else.5:
+  v11.0: int = const 1;
+  v12.0: int = sub v1.0 v11.0;
+  v14.0: int = call @count_path v12.0 v13.0;
+  v18.0: int = sub v13.0 v11.0;
+  v19.0: int = call @count_path v1.0 v18.0;
+  v20.0: int = add v14.0 v19.0;
+  v27.0: int = call @count_path v12.0 v18.0;
+  v28.0: int = add v20.0 v27.0;
+  ret v28.0;
+}
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ sh cs6120/final/test_single.sh benchmarks/core/delannoy.bril [1P[1P[1P[1P[1P[1P[1P[1P[1@q[1@u[1@a[7@dratic.[1P
+@main(a: int, b: int, c: int) {
+.b1:
+  call @quadratic a b c;
+  ret;
+}
+@sqrt(x: int): int {
+.b1:
+  v9.init: int = undef;
+  v8.init: int = undef;
+  v6.init: bool = undef;
+  v5.init: int = undef;
+  v4.init: int = undef;
+  v3.init: int = undef;
+  v2.init: int = undef;
+  v16.init: int = undef;
+  v15.init: int = undef;
+  v14.init: int = undef;
+  v12.init: bool = undef;
+  v11.init: int = undef;
+  v10.init: int = undef;
+  v1.0: int = const 1;
+  i.0: int = id v1.0;
+  v14.0: int = id v9.init;
+  v14.0: int = id v8.init;
+  v6.0: bool = id v6.init;
+  v5.0: int = id v5.init;
+  v15.0: int = id v4.init;
+  v11.0: int = id v3.init;
+  v14.0: int = id v2.init;
+  v16.0: int = id v16.init;
+  v15.0: int = id v15.init;
+  v14.0: int = id v14.init;
+  v12.0: bool = id v12.init;
+  v11.0: int = id v11.init;
+  v10.0: int = id v10.init;
+  i.1: int = id i.0;
+  jmp .for.cond.0;
+.for.cond.0:
+  v13.0: int = id i.1;
+  v11.1: int = id x;
+  v5.1: int = sub v11.1 v1.0;
+  v6.1: bool = lt v13.0 v5.1;
+  br v6.1 .for.body.0 .for.end.0;
+.for.body.0:
+  v10.1: int = mul v13.0 v13.0;
+  v12.1: bool = ge v10.1 v11.1;
+  br v12.1 .then.7 .else.7;
+.then.7:
+  ret v13.0;
+.else.7:
+  jmp .endif.7;
+.endif.7:
+  v16.1: int = add v13.0 v1.0;
+  i.2: int = id v16.1;
+  v14.0: int = id v13.0;
+  v14.0: int = id v13.0;
+  v6.0: bool = id v6.1;
+  v5.0: int = id v5.1;
+  v15.0: int = id v1.0;
+  v11.0: int = id v11.1;
+  v14.0: int = id v13.0;
+  v16.0: int = id v16.1;
+  v15.0: int = id v1.0;
+  v14.0: int = id v13.0;
+  v12.0: bool = id v12.1;
+  v11.0: int = id v11.1;
+  v10.0: int = id v10.1;
+  i.1: int = id i.2;
+  jmp .for.cond.0;
+.for.end.0:
+  v17.0: int = const 0;
+  ret v17.0;
+}
+@quadratic(a: int, b: int, c: int) {
+.b1:
+  v0.0: int = id b;
+  v2.0: int = mul v0.0 v0.0;
+  v3.0: int = const 4;
+  v10.0: int = id a;
+  v5.0: int = mul v3.0 v10.0;
+  v6.0: int = id c;
+  v7.0: int = mul v5.0 v6.0;
+  v8.0: int = sub v2.0 v7.0;
+  s.0: int = id v8.0;
+  v9.0: int = const 2;
+  v11.0: int = mul v10.0 v9.0;
+  d.0: int = id v11.0;
+  v12.0: int = const 0;
+  v14.0: int = sub v12.0 v0.0;
+  v15.0: int = id s.0;
+  v16.0: int = call @sqrt v15.0;
+  v17.0: int = add v14.0 v16.0;
+  r1.0: int = id v17.0;
+  v23.0: int = sub v14.0 v16.0;
+  r2.0: int = id v23.0;
+  v24.0: int = id r1.0;
+  v25.0: int = id d.0;
+  v26.0: int = div v24.0 v25.0;
+  print v26.0;
+  v28.0: int = id r2.0;
+  v30.0: int = div v28.0 v25.0;
+  print v30.0;
+  ret;
+}
+]0;nya1025@DESKTOP-C2SGU4R: ~/bril[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/bril[00m$ 
