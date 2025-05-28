@@ -1,0 +1,16 @@
+user: ls
+error: file not found
+user: cat error.log
+aed
+user: ls
+file1
+file2
+file3
+user: explorer.exe .
+user: ls
+error: file not found
+user: cat error.log
+aed
+user: nano error.log
+dea
+user: ls

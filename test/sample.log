@@ -1,0 +1,23 @@
+user: ls
+file1.txt
+file2.txt
+file3.txt
+
+user: cat file1.txt
+Hello World
+This is a test file
+
+user: grep "test" file1.txt
+This is a test file
+
+user: echo "Hello" > file4.txt
+
+user: cat file4.txt
+Hello
+
+user: rm file4.txt
+
+user: ls
+file1.txt
+file2.txt
+file3.txt 

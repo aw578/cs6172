@@ -1,0 +1,9 @@
+temp.txt
+.vscode/
+.idea/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.cursor/
