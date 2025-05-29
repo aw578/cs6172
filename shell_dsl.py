@@ -11,7 +11,55 @@ class Expression:
         assert False, "not implemented"
 
     def cost(self):
-        return 1 + sum([0] + [argument.cost() for argument in self.arguments()])
+        base_cost = 1 + sum([0] + [argument.cost() for argument in self.arguments()])
+        # Apply cost reduction for qualifying number expressions
+        if self.return_type == "int" and self._qualifies_for_cost_reduction():
+            return max(0, base_cost - 1)
+        return base_cost
+
+    def priority(self):
+        """Calculate priority for tiebreaking. Higher priority means better (evaluated first)."""
+        if self.return_type == "int" and self._qualifies_for_cost_reduction():
+            return 1
+        return 0
+
+    def _qualifies_for_cost_reduction(self):
+        """Check if this number expression qualifies for cost reduction."""
+        if self.return_type != "int":
+            return False
+
+        # Get all leaf nodes
+        leaves = self._get_leaf_nodes()
+
+        # Count different types of leaves
+        substring_sources = set()  # Track different substring sources
+        has_number_literal = False
+
+        for leaf in leaves:
+            if isinstance(leaf, ToInt):
+                # Check if it's ToInt(Substring(...))
+                if isinstance(leaf.value, Substring):
+                    substring = leaf.value
+                    # Create a unique identifier for this substring source
+                    source_id = (str(substring.the_string), str(substring.left), str(substring.right))
+                    substring_sources.add(source_id)
+            elif isinstance(leaf, Number) and leaf.n not in [-1, 0]:
+                has_number_literal = True
+
+        # Qualifies if:
+        # 1. Multiple different substring sources, OR
+        # 2. At least one substring source AND at least one number literal
+        return len(substring_sources) > 1 or (len(substring_sources) > 0 and has_number_literal)
+
+    def _get_leaf_nodes(self):
+        """Get all leaf nodes (nodes with no arguments) in this expression tree."""
+        if not self.arguments():
+            return [self]
+
+        leaves = []
+        for arg in self.arguments():
+            leaves.extend(arg._get_leaf_nodes())
+        return leaves
 
     def __repr__(self):
         return str(self)
@@ -54,6 +102,9 @@ class FALSE(Expression):
     def evaluate(self, environment):
         return False
 
+    def arguments(self):
+        return []
+
 
 class Number(Expression):
     return_type = "int"
@@ -85,6 +136,9 @@ class Number(Expression):
     def evaluate(self, environment):
         return self.n
 
+    def arguments(self):
+        return []
+
 
 class Plus(Expression):
     return_type = "int"
@@ -97,13 +151,16 @@ class Plus(Expression):
         return f"Plus({self.x}, {self.y})"
 
     def pretty_print(self):
-        return f"(+ {self.x.pretty_print()} {self.y.pretty_print()})"
+        return f"({self.x.pretty_print()} + {self.y.pretty_print()})"
 
     def evaluate(self, environment):
         x = self.x.evaluate(environment)
         y = self.y.evaluate(environment)
         assert isinstance(x, int) and isinstance(y, int)
         return x + y
+
+    def arguments(self):
+        return [self.x, self.y]
 
 
 class Minus(Expression):
@@ -117,13 +174,16 @@ class Minus(Expression):
         return f"Minus({self.x}, {self.y})"
 
     def pretty_print(self):
-        return f"(- {self.x.pretty_print()} {self.y.pretty_print()})"
+        return f"({self.x.pretty_print()} - {self.y.pretty_print()})"
 
     def evaluate(self, environment):
         x = self.x.evaluate(environment)
         y = self.y.evaluate(environment)
         assert isinstance(x, int) and isinstance(y, int)
         return x - y
+
+    def arguments(self):
+        return [self.x, self.y]
 
 
 # class Times(Expression):
@@ -137,7 +197,7 @@ class Minus(Expression):
 #         return f"Times({self.x}, {self.y})"
 
 #     def pretty_print(self):
-#         return f"(* {self.x.pretty_print()} {self.y.pretty_print()})"
+#         return f"({self.x.pretty_print()} * {self.y.pretty_print()})"
 
 #     def evaluate(self, environment):
 #         x = self.x.evaluate(environment)
@@ -157,13 +217,16 @@ class LessThan(Expression):
         return f"LessThan({self.x}, {self.y})"
 
     def pretty_print(self):
-        return f"(< {self.x.pretty_print()} {self.y.pretty_print()})"
+        return f"({self.x.pretty_print()} < {self.y.pretty_print()})"
 
     def evaluate(self, environment):
         x = self.x.evaluate(environment)
         y = self.y.evaluate(environment)
         assert isinstance(x, int) and isinstance(y, int)
         return x < y
+
+    def arguments(self):
+        return [self.x, self.y]
 
 
 class And(Expression):
@@ -177,13 +240,16 @@ class And(Expression):
         return f"And({self.x}, {self.y})"
 
     def pretty_print(self):
-        return f"(and {self.x.pretty_print()} {self.y.pretty_print()})"
+        return f"({self.x.pretty_print()} && {self.y.pretty_print()})"
 
     def evaluate(self, environment):
         x = self.x.evaluate(environment)
         y = self.y.evaluate(environment)
         assert isinstance(x, bool) and isinstance(y, bool)
         return x and y
+
+    def arguments(self):
+        return [self.x, self.y]
 
 
 class Not(Expression):
@@ -197,12 +263,15 @@ class Not(Expression):
         return f"Not({self.x})"
 
     def pretty_print(self):
-        return f"(not {self.x.pretty_print()})"
+        return f"(! {self.x.pretty_print()})"
 
     def evaluate(self, environment):
         x = self.x.evaluate(environment)
         assert isinstance(x, bool)
         return not x
+
+    def arguments(self):
+        return [self.x]
 
 
 class Or(Expression):
@@ -217,13 +286,16 @@ class Or(Expression):
         return f"Or({self.left}, {self.right})"
 
     def pretty_print(self):
-        return f"(or {self.left.pretty_print()} {self.right.pretty_print()})"
+        return f"({self.left.pretty_print()} || {self.right.pretty_print()})"
 
     def evaluate(self, environment):
         left_val = self.left.evaluate(environment)
         right_val = self.right.evaluate(environment)
         assert isinstance(left_val, bool) and isinstance(right_val, bool)
         return left_val or right_val
+
+    def arguments(self):
+        return [self.left, self.right]
 
 
 class StringEquals(Expression):
@@ -240,7 +312,7 @@ class StringEquals(Expression):
         return f"StringEquals({self.left}, {self.right})"
 
     def pretty_print(self):
-        return f"(= {self.left.pretty_print()} {self.right.pretty_print()})"
+        return f"({self.left.pretty_print()} == {self.right.pretty_print()})"
 
     def evaluate(self, environment):
         left_val = self.left.evaluate(environment)
@@ -265,7 +337,7 @@ class If(Expression):
         return f"If({self.test}, {self.yes}, {self.no})"
 
     def pretty_print(self):
-        return f"(if {self.test.pretty_print()} {self.yes.pretty_print()} {self.no.pretty_print()})"
+        return f"(if {self.test.pretty_print()} then {self.yes.pretty_print()} else {self.no.pretty_print()})"
 
     def evaluate(self, environment):
         test = self.test.evaluate(environment)
@@ -276,6 +348,9 @@ class If(Expression):
             return yes
         else:
             return no
+
+    def arguments(self):
+        return [self.test, self.yes, self.no]
 
 
 class Concatenate(Expression):
@@ -288,8 +363,25 @@ class Concatenate(Expression):
     def __str__(self):
         return f"Concatenate({self.left}, {self.right})"
 
+    def is_constant_string(self):
+        return (isinstance(self.left, ConstantString) or (isinstance(self.left, Concatenate) and self.left.is_constant_string())) and (
+            isinstance(self.right, ConstantString) or (isinstance(self.right, Concatenate) and self.right.is_constant_string())
+        )
+
     def pretty_print(self):
-        return f"{self.left.pretty_print()} + {self.right.pretty_print()}"
+        # if the left and right are both constant strings, then we can just remove the quotes and concatenate them
+        if self.is_constant_string():
+            if isinstance(self.left, ConstantString):
+                left_str = self.left.pretty_print()[1:-1]
+            else:
+                left_str = self.left.pretty_print()
+            if isinstance(self.right, ConstantString):
+                right_str = self.right.pretty_print()[1:-1]
+            else:
+                right_str = self.right.pretty_print()
+            return f"{left_str}{right_str}"
+        else:
+            return f"({self.left.pretty_print()} + {self.right.pretty_print()})"
 
     def extension(self):
         return [Concatenate(left, right) for left in self.left.extension() for right in self.right.extension()]
@@ -308,6 +400,9 @@ class Concatenate(Expression):
 
     def evaluate(self, environment):
         return self.left.evaluate(environment) + self.right.evaluate(environment)
+
+    def arguments(self):
+        return [self.test, self.yes, self.no]
 
 
 class ConstantString(Expression):
@@ -442,6 +537,9 @@ class NumberVariable(Expression):
 
     def evaluate(self, environment):
         return environment[self.name]
+
+    def arguments(self):
+        return []
 
 
 class ToString(Expression):
@@ -596,6 +694,9 @@ def bottom_up_generator(global_bound, operators, constants, input_outputs):
     # (outputs)
     values = {}
 
+    # Track expressions by size and priority for proper ordering
+    expressions_by_size = {}
+
     # return whether it's new
     def evaluate(expr, size):
         value = tuple([expr.evaluate(input) for input in inputs])
@@ -604,26 +705,42 @@ def bottom_up_generator(global_bound, operators, constants, input_outputs):
                 map[(expr.return_type, size)] = []
             map[(expr.return_type, size)].append(expr)
             values[value] = True
+
+            # Store expression by size for priority-based ordering
+            if size not in expressions_by_size:
+                expressions_by_size[size] = []
+            expressions_by_size[size].append(expr)
+
             return True
         return False
 
+    # Process size 1 expressions first
+    size_1_expressions = []
     for item in variables_and_constants:
         if evaluate(item, 1):
-            yield item
+            size_1_expressions.append(item)
 
-    for size in range(1, global_bound + 1):
-        # print(f"""==========size = {size}==========""")
-        # print(map)
-        # print(values)
+    # Sort size 1 expressions by priority and yield them
+    size_1_expressions.sort(key=lambda x: (-x.priority(), str(x)))
+    for expr in size_1_expressions:
+        yield expr
+
+    for size in range(2, global_bound + 1):
+        size_expressions = []
+
         for operator in operators:
             partitions = integer_partitions(size - 1, len(operator.argument_types))
             for partition in partitions:
                 args = [map.get((operator.argument_types[sub_idx], partition[sub_idx]), []) for sub_idx in range(len(partition))]
-                # print(f"""operator = {operator}""")
-                # print(f"""args for partition {partition}: {args}""")
                 for combination in itertools.product(*args):
-                    if evaluate(operator(*combination), size):
-                        yield operator(*combination)
+                    expr = operator(*combination)
+                    if evaluate(expr, size):
+                        size_expressions.append(expr)
+
+        # Sort expressions of this size by priority (higher priority first), then lexicographically
+        size_expressions.sort(key=lambda x: -x.priority())
+        for expr in size_expressions:
+            yield expr
 
 
 def integer_partitions(target_value, number_of_arguments):

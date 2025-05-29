@@ -8,3 +8,5 @@ __pycache__/
 *.pyd
 .cursor/
 unparsed_logs/
+parsed_logs/
+cleaned_logs/
