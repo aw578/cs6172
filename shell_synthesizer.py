@@ -76,13 +76,72 @@ class ShellSynthesizer:
                 # Add negative indices
                 expressions.add(Substring(StringVariable("output"), -(len(first_output) - start_idx), -(len(first_output) - end_idx)))
 
-        # Special handling for numbers
+        # Special handling for numbers using bottom-up synthesis
         if self._is_number(word):
             try:
-                num = int(float(word))
-                expressions.add(Number(num))
-                # Avoid using ToString to prevent recursion
-                expressions.add(ConstantString(str(num)))
+                target_num = int(float(word))
+
+                # Collect literals for bottom-up synthesis
+                literals = [Number(1)]  # Base literal
+
+                # Find all numbers in first_input and generate ToInt(Substring(...)) expressions
+                for input_word in first_input_words:
+                    if self._is_number(input_word):
+                        # Find indices of this number in the input
+                        start_idx = first_input.find(input_word)
+                        end_idx = start_idx + len(input_word) - 1
+
+                        # Add positive indices ToInt
+                        literals.append(ToInt(Substring(StringVariable("command"), Number(start_idx), Number(end_idx))))
+                        # Add negative indices ToInt
+                        literals.append(
+                            ToInt(
+                                Substring(
+                                    StringVariable("command"),
+                                    Number(-(len(first_input) - start_idx)),
+                                    Number(-(len(first_input) - end_idx)),
+                                )
+                            )
+                        )
+
+                # Find all numbers in first_output and generate ToInt(Substring(...)) expressions
+                for output_word in first_output_words:
+                    if self._is_number(output_word):
+                        # Find indices of this number in the output
+                        start_idx = first_output.find(output_word)
+                        end_idx = start_idx + len(output_word) - 1
+
+                        # Add positive indices ToInt
+                        literals.append(ToInt(Substring(StringVariable("output"), Number(start_idx), Number(end_idx))))
+                        # Add negative indices ToInt
+                        literals.append(
+                            ToInt(
+                                Substring(
+                                    StringVariable("output"),
+                                    Number(-(len(first_output) - start_idx)),
+                                    Number(-(len(first_output) - end_idx)),
+                                )
+                            )
+                        )
+
+                # Use bottom-up synthesis to generate expressions that evaluate to target_num
+                operators = [Plus, Minus]
+
+                # Create a dummy environment for synthesis
+                dummy_env = {"command": first_input, "output": first_output}
+                input_outputs = [(dummy_env, target_num)]
+
+                # Try to synthesize expressions up to depth 5
+                synthesized_expr = bottom_up(5, operators, literals, input_outputs)
+
+                if synthesized_expr is not None:
+                    # Wrap in ToString and add to expressions
+                    expressions.add(ToString(synthesized_expr))
+
+                # Fallback to original behavior if synthesis fails
+                expressions.add(Number(target_num))
+                expressions.add(ConstantString(str(target_num)))
+
             except ValueError:
                 pass
 

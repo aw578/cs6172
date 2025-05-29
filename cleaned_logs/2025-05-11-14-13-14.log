@@ -1,0 +1,91 @@
+user: /bin/python /home/nya1025/.vscode-server/extensions/ms-python.python-2025.6.0-linux-x64/python_files/printEnvVariablesToFile.py /home/nya1025/.vscode-server/extensions/ms-python.python-2025.6.0-linux-x64/python_files/deactivate/bash/envVars.tx
+user: python src/code/temp.py
+python src/code/temp.py
+user: python src/code/temp.py
+python src/code/temp.py
+Traceback (most recent call last):
+File "/home/nya1025/MEng-LII-2025-spring/src/code/temp.py", line 36, in <module>
+ax.plot(x_smooth, revenue_smooth, label="ARR", color=arr_color, linewidth=5)
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_axes.py", line 1777, in plot
+lines = [*self._get_lines(self, *args, data=data, **kwargs)]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_base.py", line 297, in __call__
+yield from self._plot_args(
+^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_base.py", line 494, in _plot_args
+raise ValueError(f"x and y must have same first dimension, but "
+ValueError: x and y must have same first dimension, but have shapes (12,) and (1,)
+python src/code/temp.pypython src/code/temp.py
+python src/code/temp.py
+Traceback (most recent call last):
+File "/home/nya1025/MEng-LII-2025-spring/src/code/temp.py", line 35, in <module>
+ax.plot(years, revenue, label="ARR", color=arr_color, linewidth=5,
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_axes.py", line 1777, in plot
+lines = [*self._get_lines(self, *args, data=data, **kwargs)]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_base.py", line 297, in __call__
+yield from self._plot_args(
+^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_base.py", line 494, in _plot_args
+raise ValueError(f"x and y must have same first dimension, but "
+ValueError: x and y must have same first dimension, but have shapes (4,) and (8,)
+python src/code/temp.py
+Traceback (most recent call last):
+File "/home/nya1025/MEng-LII-2025-spring/src/code/temp.py", line 36, in <module>
+ax.plot(rev_years, revenue, label="ARR", color=arr_color, linewidth=5,
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_axes.py", line 1777, in plot
+lines = [*self._get_lines(self, *args, data=data, **kwargs)]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_base.py", line 297, in __call__
+yield from self._plot_args(
+^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_base.py", line 494, in _plot_args
+raise ValueError(f"x and y must have same first dimension, but "
+ValueError: x and y must have same first dimension, but have shapes (8,) and (7,)
+python src/code/temp.py
+python src/code/temp.py
+python src/code/temp.py
+Traceback (most recent call last):
+File "/home/nya1025/MEng-LII-2025-spring/src/code/temp.py", line 27, in <module>
+ax.stackplot(
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/__init__.py", line 1521, in inner
+return func(
+^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/stackplot.py", line 142, in stackplot
+r.append(axes.fill_between(x, stack[i, :], stack[i + 1, :],
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/__init__.py", line 1521, in inner
+return func(
+^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_axes.py", line 5716, in fill_between
+return self._fill_between_x_or_y(
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/axes/_axes.py", line 5701, in _fill_between_x_or_y
+collection = mcoll.FillBetweenPolyCollection(
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/collections.py", line 1341, in __init__
+super().__init__(verts, **kwargs)
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/collections.py", line 1210, in __init__
+super().__init__(**kwargs)
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/collections.py", line 209, in __init__
+self._internal_update(kwargs)
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/artist.py", line 1233, in _internal_update
+return self._update_props(
+^^^^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/artist.py", line 1209, in _update_props
+ret.append(func(v))
+^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/collections.py", line 796, in set_facecolor
+self._set_facecolor(c)
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/collections.py", line 778, in _set_facecolor
+self._facecolors = mcolors.to_rgba_array(c, self._alpha)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/nya1025/MEng-LII-2025-spring/venv/lib/python3.11/site-packages/matplotlib/colors.py", line 499, in to_rgba_array
+raise ValueError(f"{c!r} is not a valid color value.")
+ValueError: 'CD5C5C' is not a valid color value.
+python src/code/temp.py
+python src/code/temp.py
+python src/code/temp.py
+python src/code/temp.py

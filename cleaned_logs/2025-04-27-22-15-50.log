@@ -1,0 +1,119 @@
+user: git add .
+git commit -m "start gvn,, need to handle phis, available expressions"
+[main ad0520e] start gvn, need to handle phis, available expressions
+21 files changed, 255 insertions(+)
+create mode 100644 cs6120/final/gvn.py
+create mode 100644 cs6120/final/tests/aliases.bril
+create mode 100644 cs6120/final/tests/aliases.out
+create mode 100644 cs6120/final/tests/basic.bril
+create mode 100644 cs6120/final/tests/basic.out
+create mode 100644 cs6120/final/tests/commute.bril
+create mode 100644 cs6120/final/tests/commute.out
+create mode 100644 cs6120/final/tests/control.bril
+create mode 100644 cs6120/final/tests/control.out
+create mode 100644 cs6120/final/tests/cycles.bril
+create mode 100644 cs6120/final/tests/cycles.out
+create mode 100644 cs6120/final/tests/cycles_hard.bril
+create mode 100644 cs6120/final/tests/cycles_hard.out
+create mode 100644 cs6120/final/tests/sensitivity.bril
+create mode 100644 cs6120/final/tests/sensitivity.out
+create mode 100644 cs6120/final/tests/transitive.bril
+create mode 100644 cs6120/final/tests/transitive.out
+create mode 100644 cs6120/final/tests/unrelated.bril
+create mode 100644 cs6120/final/tests/unrelated.out
+create mode 100644 cs6120/final/turnt.toml
+create mode 100644 cs6120/final/value-numbering.pdf
+user: git push
+Enter passphrase for key '/home/nya1025/.ssh/normal_id':
+Enumerating objects: 28, done.
+Counting objects:   3% (1/28)
+Counting objects:   7% (2/28)
+Counting objects:  10% (3/28)
+Counting objects:  14% (4/28)
+Counting objects:  17% (5/28)
+Counting objects:  21% (6/28)
+Counting objects:  25% (7/28)
+Counting objects:  28% (8/28)
+Counting objects:  32% (9/28)
+Counting objects:  35% (10/28)
+Counting objects:  39% (11/28)
+Counting objects:  42% (12/28)
+Counting objects:  46% (13/28)
+Counting objects:  50% (14/28)
+Counting objects:  53% (15/28)
+Counting objects:  57% (16/28)
+Counting objects:  60% (17/28)
+Counting objects:  64% (18/28)
+Counting objects:  67% (19/28)
+Counting objects:  71% (20/28)
+Counting objects:  75% (21/28)
+Counting objects:  78% (22/28)
+Counting objects:  82% (23/28)
+Counting objects:  85% (24/28)
+Counting objects:  89% (25/28)
+Counting objects:  92% (26/28)
+Counting objects:  96% (27/28)
+Counting objects: 100% (28/28)
+Counting objects: 100% (28/28), done.
+Delta compression using up to 16 threads
+Compressing objects:   3% (1/26)
+Compressing objects:   7% (2/26)
+Compressing objects:  11% (3/26)
+Compressing objects:  15% (4/26)
+Compressing objects:  19% (5/26)
+Compressing objects:  23% (6/26)
+Compressing objects:  26% (7/26)
+Compressing objects:  30% (8/26)
+Compressing objects:  34% (9/26)
+Compressing objects:  38% (10/26)
+Compressing objects:  42% (11/26)
+Compressing objects:  46% (12/26)
+Compressing objects:  50% (13/26)
+Compressing objects:  53% (14/26)
+Compressing objects:  57% (15/26)
+Compressing objects:  61% (16/26)
+Compressing objects:  65% (17/26)
+Compressing objects:  69% (18/26)
+Compressing objects:  73% (19/26)
+Compressing objects:  76% (20/26)
+Compressing objects:  80% (21/26)
+Compressing objects:  84% (22/26)
+Compressing objects:  88% (23/26)
+Compressing objects:  92% (24/26)
+Compressing objects:  96% (25/26)
+Compressing objects: 100% (26/26)
+Compressing objects: 100% (26/26), done.
+Writing objects:   3% (1/26)
+Writing objects:   7% (2/26)
+Writing objects:  11% (3/26)
+Writing objects:  15% (4/26)
+Writing objects:  19% (5/26)
+Writing objects:  23% (6/26)
+Writing objects:  26% (7/26)
+Writing objects:  30% (8/26)
+Writing objects:  34% (9/26)
+Writing objects:  38% (10/26)
+Writing objects:  42% (11/26)
+Writing objects:  50% (13/26)
+Writing objects:  53% (14/26)
+Writing objects:  57% (15/26)
+Writing objects:  61% (16/26)
+Writing objects:  65% (17/26)
+Writing objects:  69% (18/26)
+Writing objects:  73% (19/26)
+Writing objects:  76% (20/26)
+Writing objects:  80% (21/26)
+Writing objects:  84% (22/26)
+Writing objects:  88% (23/26)
+Writing objects:  92% (24/26)
+Writing objects:  96% (25/26)
+Writing objects: 100% (26/26)
+Writing objects: 100% (26/26), 139.03 KiB | 7.32 MiB/s, done.
+Total 26 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/3)
+remote: Resolving deltas:  33% (1/3)
+remote: Resolving deltas:  66% (2/3)
+remote: Resolving deltas: 100% (3/3)
+remote: Resolving deltas: 100% (3/3), completed with 2 local objects.
+To github.com:aw578/bril.git
+a426eb1..ad0520e  main -> main

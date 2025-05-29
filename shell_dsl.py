@@ -106,6 +106,26 @@ class Plus(Expression):
         return x + y
 
 
+class Minus(Expression):
+    return_type = "int"
+    argument_types = ["int", "int"]
+
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+
+    def __str__(self):
+        return f"Minus({self.x}, {self.y})"
+
+    def pretty_print(self):
+        return f"(- {self.x.pretty_print()} {self.y.pretty_print()})"
+
+    def evaluate(self, environment):
+        x = self.x.evaluate(environment)
+        y = self.y.evaluate(environment)
+        assert isinstance(x, int) and isinstance(y, int)
+        return x - y
+
+
 # class Times(Expression):
 #     return_type = "int"
 #     argument_types = ["int", "int"]
@@ -459,6 +479,9 @@ class ToInt(Expression):
 
     def pretty_print(self):
         return f"ToInt({self.value.pretty_print()})"
+
+    def __str__(self):
+        return f"ToInt({self.value})"
 
     def arguments(self):
         return [self.value]
