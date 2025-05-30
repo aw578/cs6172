@@ -1,0 +1,61 @@
+# Rule: After backup operations, verify integrity. After restore operations, check restored files. After file operations, list contents.
+# Boolean condition: Contains(command, "tar") AND Contains(command, "-c") -> verify backup | Contains(command, "tar") AND Contains(command, "-x") -> list restored files | Contains(command, "cp") OR Contains(command, "rsync") -> "ls"
+user: ls -la /home/user/documents
+total 24
+drwxr-xr-x 3 user user 4096 Oct 15 10:00 .
+drwxr-xr-x 8 user user 4096 Oct 15 09:30 ..
+-rw-r--r-- 1 user user 1024 Oct 15 10:00 file1.txt
+-rw-r--r-- 1 user user 2048 Oct 15 10:00 file2.pdf
+drwxr-xr-x 2 user user 4096 Oct 15 10:00 projects
+user: tar -czf backup_$(date +%Y%m%d).tar.gz /home/user/documents
+tar: Removing leading '/' from member names
+user: ls -lh backup_*.tar.gz
+-rw-r--r-- 1 user user 1.5K Oct 15 14:30 backup_20231015.tar.gz
+user: tar -tzf backup_20231015.tar.gz | head -n 5
+home/user/documents/
+home/user/documents/file1.txt
+home/user/documents/file2.pdf
+home/user/documents/projects/
+home/user/documents/projects/project1.py
+user: mkdir restore_test
+user: cd restore_test
+user: tar -xzf ../backup_20231015.tar.gz
+user: ls -la
+total 12
+drwxr-xr-x 3 user user 4096 Oct 15 14:31 .
+drwxr-xr-x 4 user user 4096 Oct 15 14:31 ..
+drwxr-xr-x 3 user user 4096 Oct 15 14:31 home
+user: find . -name "*.txt"
+./home/user/documents/file1.txt
+user: cp backup_20231015.tar.gz /backup/daily/
+user: ls -lh /backup/daily/
+total 3.0K
+-rw-r--r-- 1 user user 1.5K Oct 15 14:30 backup_20231015.tar.gz
+-rw-r--r-- 1 user user 1.2K Oct 14 14:30 backup_20231014.tar.gz
+user: rsync -av /home/user/documents/ /backup/sync/
+sending incremental file list
+./
+file1.txt
+file2.pdf
+projects/
+projects/project1.py
+
+sent 4,567 bytes  received 123 bytes  9,380.00 bytes/sec
+total size is 3,456  speedup is 0.74
+user: ls -la /backup/sync/
+total 16
+drwxr-xr-x 3 user user 4096 Oct 15 14:32 .
+drwxr-xr-x 4 user user 4096 Oct 15 14:32 ..
+-rw-r--r-- 1 user user 1024 Oct 15 14:32 file1.txt
+-rw-r--r-- 1 user user 2048 Oct 15 14:32 file2.pdf
+drwxr-xr-x 2 user user 4096 Oct 15 14:32 projects
+user: gzip backup_20231015.tar.gz
+gzip: backup_20231015.tar.gz already has .gz suffix -- unchanged
+user: md5sum backup_20231015.tar.gz
+a1b2c3d4e5f6789012345678abcdef12  backup_20231015.tar.gz
+user: echo "a1b2c3d4e5f6789012345678abcdef12" > backup_20231015.md5
+user: md5sum -c backup_20231015.md5
+backup_20231015.tar.gz: OK
+user: rm -rf restore_test
+user: ls backup_*
+backup_20231015.md5  backup_20231015.tar.gz 

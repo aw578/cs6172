@@ -1,0 +1,151 @@
+# Rule: After permission denied errors, retry with sudo. After file not found errors, create the missing file. After successful operations, continue workflow.
+# Boolean condition: Contains(output, "Permission denied") -> "sudo" + same command | Contains(output, "No such file") -> "touch" + filename from command | Contains(output, "success") OR output is empty -> continue workflow
+
+user: cat nonexistent.txt
+cat: nonexistent.txt: No such file or directory
+
+user: touch nonexistent.txt
+
+user: cat nonexistent.txt
+
+user: echo "test content" > nonexistent.txt
+
+user: cat nonexistent.txt
+test content
+
+user: rm restricted_file.txt
+rm: cannot remove 'restricted_file.txt': Permission denied
+
+user: sudo rm restricted_file.txt
+
+user: ls restricted_file.txt
+ls: cannot access 'restricted_file.txt': No such file or directory
+
+user: mkdir /root/newfolder
+mkdir: cannot create directory '/root/newfolder': Permission denied
+
+user: sudo mkdir /root/newfolder
+
+user: ls /root/newfolder
+
+user: cp missing.txt backup.txt
+cp: cannot stat 'missing.txt': No such file or directory
+
+user: touch missing.txt
+
+user: cp missing.txt backup.txt
+
+user: ls backup.txt
+backup.txt
+
+user: rm backup.txt
+
+user: ls backup.txt
+ls: cannot access 'backup.txt': No such file or directory
+
+user: cat missing_config.conf
+cat: missing_config.conf: No such file or directory
+
+user: touch missing_config.conf
+
+user: cat missing_config.conf
+
+user: echo "port=8080" > missing_config.conf
+
+user: cat missing_config.conf
+port=8080
+
+user: python broken_script.py
+Traceback (most recent call last):
+  File "broken_script.py", line 10, in <module>
+    result = divide_by_zero()
+  File "broken_script.py", line 6, in divide_by_zero
+    return 10 / 0
+ZeroDivisionError: division by zero
+
+user: python -c "print('Hello')"
+Hello
+
+user: cd /nonexistent/directory
+bash: cd: /nonexistent/directory: No such file or directory
+
+user: pwd
+/home/user 
+
+user: python app.py
+Traceback (most recent call last):
+  File "app.py", line 5, in <module>
+    result = divide(10, 0)
+ZeroDivisionError: division by zero
+
+user: echo "def divide(a, b): return a / b if b != 0 else 'Error'" > utils.py
+
+user: python -c "from utils import divide; print(divide(10, 0))"
+Error
+
+user: python -c "from utils import divide; print(divide(10, 2))"
+5.0
+
+user: cat app.py
+from utils import divide
+result = divide(10, 0)
+print(result)
+
+user: python app.py
+Error
+
+user: python -c "import sys; print(sys.version)"
+Python 3.9.7 (default, Sep  3 2021, 04:31:11)
+
+user: python -m pdb app.py
+> /app/app.py(1)<module>()
+-> from utils import divide
+(Pdb) c
+Error
+
+user: ls -la
+total 16
+-rw-r--r-- 1 user user  45 Oct 15 14:00 app.py
+-rw-r--r-- 1 user user  52 Oct 15 14:05 utils.py
+
+user: cat > test_divide.py << EOF
+import unittest
+from utils import divide
+
+class TestDivide(unittest.TestCase):
+    def test_normal_division(self):
+        self.assertEqual(divide(10, 2), 5.0)
+    
+    def test_zero_division(self):
+        self.assertEqual(divide(10, 0), 'Error')
+
+if __name__ == '__main__':
+    unittest.main()
+EOF
+
+user: python test_divide.py
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+OK
+
+user: python -c "import traceback; traceback.print_exc()" 2>/dev/null || echo "No active exception"
+No active exception
+
+user: python -c "raise ValueError('Test error')" 2>&1 | head -n 3
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ValueError: Test error
+
+user: echo "print('Success: No errors')" > success.py
+
+user: python success.py
+Success: No errors
+
+user: rm *.py
+
+user: ls
+
+user: echo "All files cleaned up successfully"
+All files cleaned up successfully 

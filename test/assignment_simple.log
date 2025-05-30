@@ -1,0 +1,45 @@
+# Rule: After failed tests, retry the same question. After successful tests, move to the next question.
+# Boolean condition: Contains(output, "failed") -> repeat same question number | Contains(output, "successful") AND NOT Contains(output, "test " + ToString(ToInt(Substring(command, -1, -1)) + Number(1))) -> next question number
+
+user: python autograder.py -q 1
+test 1 failed
+total points: 0
+
+user: python autograder.py -q 1
+test 1 successful
+total points: 1
+
+user: python autograder.py -q 2
+test 2 failed
+total points: 0
+
+user: python autograder.py -q 2
+test 2 successful
+total points: 1
+
+user: python autograder.py -q 3
+test 3.1 failed
+test 3.2 failed
+total points: 0
+
+user: python autograder.py -q 3
+test 3.1 successful
+test 3.2 failed
+total points: 1
+
+user: python autograder.py -q 3
+test 3.1 successful
+test 3.2 successful
+total points: 2
+
+user: python autograder.py -q 4
+test 4 successful
+total points: 1
+
+user: python autograder.py -q 5
+test 5 successful
+total points: 1
+
+
+
+

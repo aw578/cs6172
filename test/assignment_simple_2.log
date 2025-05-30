@@ -1,0 +1,67 @@
+user: python autograder.py
+FAIL part 1
+total points: 0
+
+user: nano part1.py
+
+user: python autograder.py
+PASS part 1
+total points: 1
+
+user: python autograder.py
+PASS part 1
+FAIL part 2
+total points: 1
+
+user: nano part2.py
+
+user: python autograder.py
+PASS part 1
+PASS part 2
+total points: 2
+
+user: python autograder.py
+PASS part 1
+PASS part 2
+FAIL part 3
+total points: 2
+
+user: nano part3.py
+
+user: python autograder.py
+PASS part 1
+PASS part 2
+PASS part 3
+total points: 5
+
+user: python autograder.py
+PASS part 1
+PASS part 2
+PASS part 3
+total points: 5
+
+user: python autograder.py
+PASS part 1
+PASS part 2
+PASS part 3
+FAIL part 4
+total points: 5
+
+user: nano part4.py
+
+user: python autograder.py
+PASS part 1
+PASS part 2
+PASS part 3
+FAIL part 4
+total points: 8
+
+user: nano part4.py
+
+user: python autograder.py
+PASS part 1
+PASS part 2
+PASS part 3
+PASS part 4
+total points: 10
+

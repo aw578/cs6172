@@ -1,0 +1,73 @@
+# Rule: After API responses with errors, check HTTP status codes. After successful responses with id, query that specific resource.
+# Boolean condition: Contains(output, "error") OR Contains(output, "404") OR Contains(output, "500") -> curl -w status on same URL | Contains(output, "id") -> curl GET with the id from output
+
+user: curl -X GET http://localhost:3000/api/users
+[
+  {"id": 1, "name": "Alice", "email": "alice@example.com"},
+  {"id": 2, "name": "Bob", "email": "bob@example.com"}
+]
+
+user: curl -X GET http://localhost:3000/api/users/1
+{"id": 1, "name": "Alice", "email": "alice@example.com"}
+
+user: curl -X GET http://localhost:3000/api/users/999
+{"error": "User not found", "code": 404}
+
+user: curl -w "%{http_code}" -s -o /dev/null http://localhost:3000/api/users/999
+404
+
+user: curl -X POST http://localhost:3000/api/users -H "Content-Type: application/json" -d '{"name": "Charlie", "email": "charlie@example.com"}'
+{"id": 3, "name": "Charlie", "email": "charlie@example.com", "created": "2023-10-15T14:30:15Z"}
+
+user: curl -X GET http://localhost:3000/api/users/3
+{"id": 3, "name": "Charlie", "email": "charlie@example.com", "created": "2023-10-15T14:30:15Z"}
+
+user: curl -X PUT http://localhost:3000/api/users/3 -H "Content-Type: application/json" -d '{"name": "Charlie Brown"}'
+{"id": 3, "name": "Charlie Brown", "email": "charlie@example.com", "updated": "2023-10-15T14:30:30Z"}
+
+user: curl -X GET http://localhost:3000/api/users/3
+{"id": 3, "name": "Charlie Brown", "email": "charlie@example.com", "updated": "2023-10-15T14:30:30Z"}
+
+user: curl -X DELETE http://localhost:3000/api/users/3
+{"message": "User deleted successfully", "id": 3}
+
+user: curl -X GET http://localhost:3000/api/users/3
+{"error": "User not found", "code": 404}
+
+user: curl -w "%{http_code}" -s -o /dev/null http://localhost:3000/api/users/3
+404
+
+user: curl -X GET http://localhost:3000/api/products/5
+{"id": 5, "name": "Widget", "price": 29.99}
+
+user: curl -X GET http://localhost:3000/api/products/5
+{"id": 5, "name": "Widget", "price": 29.99}
+
+user: curl -X GET http://localhost:3000/api/orders/100
+{"error": "Order not found", "code": 404}
+
+user: curl -w "%{http_code}" -s -o /dev/null http://localhost:3000/api/orders/100
+404
+
+user: curl -X GET http://localhost:3000/api/health
+{"status": "ok", "timestamp": "2023-10-15T14:30:00Z"}
+
+user: curl -X GET http://localhost:3000/api/stats
+{"total_users": 2, "active_sessions": 5, "server_uptime": "2h 15m"}
+
+user: curl -X POST http://localhost:3000/api/auth/login -H "Content-Type: application/json" -d '{"username": "admin", "password": "secret"}'
+{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", "expires_in": 3600}
+
+user: TOKEN=$(curl -s -X POST http://localhost:3000/api/auth/login -H "Content-Type: application/json" -d '{"username": "admin", "password": "secret"}' | jq -r .token)
+
+user: curl -X GET http://localhost:3000/api/admin/users -H "Authorization: Bearer $TOKEN"
+[
+  {"id": 1, "name": "Alice", "email": "alice@example.com", "role": "user"},
+  {"id": 2, "name": "Bob", "email": "bob@example.com", "role": "user"}
+]
+
+user: curl -w "%{time_total}" -s -o /dev/null http://localhost:3000/api/health
+0.045
+
+user: ab -n 100 -c 10 http://localhost:3000/api/health | grep "Requests per second"
+Requests per second:    2245.67 [#/sec] (mean) 

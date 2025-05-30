@@ -1,0 +1,60 @@
+# Rule: After creating or modifying files (mkdir, touch, echo >), check with ls. After changing directories, list contents with ls.
+# Boolean condition: Contains(command, "mkdir") OR Contains(command, "touch") OR Contains(command, "echo") OR Contains(command, "cd") -> "ls"
+examples:
+user: mkdir project
+user: ls
+user: cd project
+user: ls
+
+user: touch README.md
+user: ls
+README.md
+user: echo "# My Project" > README.md
+user: ls
+README.md
+user: cat README.md
+# My Project
+user: mkdir src tests docs
+user: ls
+docs  README.md  src  tests
+user: cd src
+user: ls
+
+user: touch main.py utils.py
+user: ls
+main.py  utils.py
+user: echo "print('Hello World')" > main.py
+user: ls
+main.py  utils.py
+user: cat main.py
+print('Hello World')
+user: cd ../tests
+user: ls
+
+user: touch test_main.py
+user: ls
+test_main.py
+user: echo "import unittest" > test_main.py
+user: ls
+test_main.py
+user: cat test_main.py
+import unittest
+user: cd ..
+user: ls
+docs  README.md  src  tests
+user: find . -name "*.py"
+./src/main.py
+./src/utils.py
+./tests/test_main.py
+user: cp README.md docs/
+user: ls
+docs  README.md  src  tests
+user: cd docs
+user: ls
+README.md
+user: cd ..
+user: ls
+docs  README.md  src  tests
+user: rm -rf tests
+user: ls
+docs  README.md  src 

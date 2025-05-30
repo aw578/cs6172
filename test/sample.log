@@ -1,23 +1,41 @@
-user: ls
-file1.txt
-file2.txt
-file3.txt
-
-user: cat file1.txt
+# Rule: Alternate between information commands and file operations. When working with files, check content before and after modifications.
+# Boolean condition: Contains(command, "echo") OR Contains(command, "grep") -> next is checking command | Contains(command, "cat") AND Contains(output, "test") -> next is "wc -l"
+user: echo "Hello World"
 Hello World
-This is a test file
-
-user: grep "test" file1.txt
-This is a test file
-
-user: echo "Hello" > file4.txt
-
-user: cat file4.txt
-Hello
-
-user: rm file4.txt
-
-user: ls
-file1.txt
-file2.txt
-file3.txt 
+user: pwd
+/home/user
+user: date
+Sun Oct 15 14:30:00 UTC 2023
+user: whoami
+user
+user: ls -la
+total 16
+drwxr-xr-x 3 user user 4096 Oct 15 14:30 .
+drwxr-xr-x 8 root root 4096 Oct 15 13:00 ..
+-rw-r--r-- 1 user user   45 Oct 15 14:25 .bashrc
+-rw-r--r-- 1 user user   23 Oct 15 14:20 test.txt
+user: cat test.txt
+This is a test file.
+user: echo "New line" >> test.txt
+user: cat test.txt
+This is a test file.
+New line
+user: wc -l test.txt
+2 test.txt
+user: grep "test" test.txt
+This is a test file.
+user: wc -l test.txt
+2 test.txt
+user: history | tail -n 3
+  997  cat test.txt
+  998  grep "test" test.txt
+  999  history | tail -n 3
+user: env | grep USER
+USER=user
+USERNAME=user
+user: which bash
+/bin/bash
+user: uname -a
+Linux hostname 5.4.0-48-generic #52-Ubuntu SMP Thu Sep 10 10:58:14 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+user: echo $?
+0 

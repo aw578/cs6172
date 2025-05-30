@@ -1,0 +1,65 @@
+# Rule: After installing packages with pip, test the import. After creating Python files, run them. After pytest, check generated files.
+# Boolean condition: Contains(command, "pip install") -> test import | Contains(command, "cat >") AND Contains(command, ".py") -> "python" + filename | Contains(command, "pytest") -> "ls *.py*"
+user: python -c "print('Hello World')"
+Hello World
+user: python --version
+Python 3.9.7
+user: pip install requests
+Collecting requests
+Successfully installed requests-2.28.1
+user: python -c "import requests; print(requests.__version__)"
+2.28.1
+user: cat > app.py << EOF
+import requests
+
+def get_data(url):
+    response = requests.get(url)
+    return response.json()
+
+if __name__ == "__main__":
+    print("Testing API...")
+EOF
+user: python app.py
+Testing API...
+user: python -c "from app import get_data; print('Function imported')"
+Function imported
+user: pip install pytest
+Collecting pytest
+Successfully installed pytest-6.2.5
+user: python -c "import pytest; print('pytest installed')"
+pytest installed
+user: cat > test_app.py << EOF
+import pytest
+from app import get_data
+
+def test_get_data():
+    # Mock test
+    assert callable(get_data)
+EOF
+user: python test_app.py
+user: pytest test_app.py -v
+========================= test session starts =========================
+collected 1 item
+
+test_app.py::test_get_data PASSED                              [100%]
+
+========================= 1 passed in 0.12s =========================
+user: ls *.py*
+app.py
+test_app.py
+user: python -m py_compile app.py
+user: ls *.py*
+app.py
+app.pyc
+test_app.py
+user: python -c "import sys; print(sys.path[0])"
+/current/directory
+user: pip freeze
+pytest==6.2.5
+requests==2.28.1
+user: python -c "import os; print(f'Working dir: {os.getcwd()}')"
+Working dir: /current/directory
+user: rm *.pyc
+user: ls *.py
+app.py
+test_app.py 

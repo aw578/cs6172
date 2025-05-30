@@ -114,7 +114,7 @@ class Number(Expression):
         self.n = n
 
     def __str__(self):
-        return f"Number({self.n})"
+        return f"{self.n}"
 
     def cost(self):
         if self.n == -1 or self.n == 0:
@@ -381,7 +381,16 @@ class Concatenate(Expression):
                 right_str = self.right.pretty_print()
             return f"{left_str}{right_str}"
         else:
-            return f"({self.left.pretty_print()} + {self.right.pretty_print()})"
+            if isinstance(self.left, ConstantString):
+                left_str = self.left.pretty_print()[1:-1]
+            else:
+                left_str = self.left.pretty_print()
+            if isinstance(self.right, ConstantString):
+                right_str = self.right.pretty_print()[1:-1]
+            else:
+                right_str = self.right.pretty_print()
+            return f"{left_str}{right_str}"
+            # return f"({self.left.pretty_print()} + {self.right.pretty_print()})"
 
     def extension(self):
         return [Concatenate(left, right) for left in self.left.extension() for right in self.right.extension()]
@@ -445,10 +454,10 @@ class Substring(Expression):
         self.the_string, self.left, self.right = the_string, left, right
 
     def __str__(self):
-        return f"Substring({self.the_string}, {self.left}, {self.right})"
+        return f"{self.the_string}[{self.left}: {self.right}]"
 
     def pretty_print(self):
-        return f"Substring({self.the_string.pretty_print()}, {self.left.pretty_print()}, {self.right.pretty_print()})"
+        return f" {self.the_string.pretty_print()}[{self.left.pretty_print()}: {self.right.pretty_print()}]"
 
     def evaluate(self, environment):
         """
@@ -491,6 +500,42 @@ class Substring(Expression):
 
     def arguments(self):
         return [self.the_string, self.left, self.right]
+
+
+class SubWord(Expression):
+    #  Subword(str, n) should get the nth word from a string (from the left if n is positive, from the right if n is negative).
+    return_type = "str"
+    argument_types = ["str", "int"]
+
+    def __init__(self, the_string, n):
+        self.the_string, self.n = the_string, n
+
+    def __str__(self):
+        return f"{self.the_string}[{self.n}]"
+
+    def pretty_print(self):
+        return f"{self.the_string.pretty_print()}[{self.n}]"
+
+    def evaluate(self, environment):
+        the_string = self.the_string.evaluate(environment)
+        n = self.n.evaluate(environment)
+        split = the_string.split()
+        if n < len(split) and n > -len(split):
+            return split[n]
+        else:
+            return ""
+
+    def extension(self):
+        return [SubWord(str, n) for str in self.the_string.extension() for n in self.n.extension()]
+
+    def minimum_cost_member_of_extension(self):
+        return SubWord(self.the_string.minimum_cost_member_of_extension(), self.n.minimum_cost_member_of_extension())
+
+    def version_space_size(self):
+        return self.the_string.version_space_size() * self.n.version_space_size()
+
+    def arguments(self):
+        return [self.the_string, self.n]
 
 
 class StringVariable(Expression):

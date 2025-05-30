@@ -1,0 +1,103 @@
+# Rule: After database operations, check status. After creating tables, insert sample data. After queries, show results count.
+# Boolean condition: Contains(command, "CREATE") -> "INSERT" | Contains(command, "INSERT") -> "SELECT COUNT" | Contains(command, "SELECT") -> show results | Contains(command, "mysql") OR Contains(command, "psql") -> check connection
+user: mysql -u root -p
+Enter password: ****
+Welcome to MySQL Server 8.0.28
+user: SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql             |
+| performance_schema|
+| test              |
++--------------------+
+4 rows in set (0.01 sec)
+user: CREATE DATABASE myapp;
+Query OK, 1 row affected (0.02 sec)
+user: USE myapp;
+Database changed
+user: CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), email VARCHAR(100));
+Query OK, 0 rows affected (0.05 sec)
+user: SHOW TABLES;
++----------------+
+| Tables_in_myapp|
++----------------+
+| users          |
++----------------+
+1 row in set (0.01 sec)
+user: INSERT INTO users (name, email) VALUES ('Alice', 'alice@email.com'), ('Bob', 'bob@email.com');
+Query OK, 2 rows affected (0.03 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+user: SELECT * FROM users;
++----+-------+----------------+
+| id | name  | email          |
++----+-------+----------------+
+|  1 | Alice | alice@email.com|
+|  2 | Bob   | bob@email.com  |
++----+-------+----------------+
+2 rows in set (0.01 sec)
+user: SELECT COUNT(*) FROM users;
++----------+
+| COUNT(*) |
++----------+
+|        2 |
++----------+
+1 row in set (0.01 sec)
+user: UPDATE users SET email = 'alice@newdomain.com' WHERE name = 'Alice';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+user: SELECT * FROM users WHERE name = 'Alice';
++----+-------+--------------------+
+| id | name  | email              |
++----+-------+--------------------+
+|  1 | Alice | alice@newdomain.com|
++----+-------+--------------------+
+1 row in set (0.01 sec)
+user: DELETE FROM users WHERE id = 2;
+Query OK, 1 row affected (0.02 sec)
+user: SELECT COUNT(*) FROM users;
++----------+
+| COUNT(*) |
++----------+
+|        1 |
++----------+
+1 row in set (0.01 sec)
+user: DROP TABLE users;
+Query OK, 0 rows affected (0.03 sec)
+user: SHOW TABLES;
+Empty set (0.01 sec)
+
+user: mysqldump -u admin -p mydb > backup.sql
+Enter password: 
+
+user: ls -la backup.sql
+-rw-r--r-- 1 user user 45234 May 19 15:20 backup.sql
+
+user: mysql -u admin -p -e "SHOW DATABASES;"
+Enter password: 
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mydb               |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+
+user: mysql -u admin -p mydb -e "SELECT COUNT(*) FROM orders WHERE status = 'pending';"
+Enter password: 
++----------+
+| COUNT(*) |
++----------+
+|       23 |
++----------+
+
+user: sqlite3 local.db "SELECT name FROM sqlite_master WHERE type='table';"
+users
+orders
+products
+
+user: sqlite3 local.db "SELECT COUNT(*) FROM products WHERE price > 50;"
+47 

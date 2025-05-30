@@ -1,16 +1,52 @@
+# Rule: After file operations that create/modify files, run 'ls' to check. After commands that display content, continue with next file operation.
+# Boolean condition: Contains(command, "touch") OR Contains(command, "echo") OR Contains(command, "rm") OR Contains(command, "cp") -> next command is "ls"
 user: ls
 error: file not found
-user: cat error.log
-aed
+user: touch file1.txt
 user: ls
-file1
-file2
-file3
-user: explorer.exe .
+file1.txt
+user: echo "hello world" > file1.txt
+user: ls
+file1.txt
+user: cat file1.txt
+hello world
+user: touch file2.txt file3.txt
+user: ls
+file1.txt
+file2.txt
+file3.txt
+user: echo "data1" > file2.txt
+user: ls
+file1.txt
+file2.txt
+file3.txt
+user: echo "data2" > file3.txt
+user: ls
+file1.txt
+file2.txt
+file3.txt
+user: cat file2.txt
+data1
+user: cat file3.txt
+data2
+user: ls -la
+total 12
+drwxr-xr-x 2 user user 4096 Oct 15 10:30 .
+drwxr-xr-x 3 user user 4096 Oct 15 10:25 ..
+-rw-r--r-- 1 user user   12 Oct 15 10:30 file1.txt
+-rw-r--r-- 1 user user    6 Oct 15 10:31 file2.txt
+-rw-r--r-- 1 user user    6 Oct 15 10:31 file3.txt
+user: rm file2.txt
+user: ls
+file1.txt
+file3.txt
+user: cp file1.txt backup.txt
+user: ls
+backup.txt
+file1.txt
+file3.txt
+user: cat backup.txt
+hello world
+user: rm *.txt
 user: ls
 error: file not found
-user: cat error.log
-aed
-user: nano error.log
-dea
-user: ls

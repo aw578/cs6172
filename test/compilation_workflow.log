@@ -1,0 +1,72 @@
+# Rule: After successful compilation creating executables, run them. After running executables, check their size.
+# Boolean condition: Contains(command, "gcc") AND NOT Contains(output, "error") AND Contains(command, "-o") -> "./" + executable name | Contains(command, "./") -> "size " + executable name
+
+user: ls
+main.c  utils.c  utils.h
+
+user: gcc -c utils.c
+
+user: ls
+main.c  utils.c  utils.h  utils.o
+
+user: gcc -c main.c
+
+user: ls
+main.c  main.o  utils.c  utils.h  utils.o
+
+user: gcc main.o utils.o -o myapp
+
+user: ./myapp
+Hello World!
+Application started successfully.
+
+user: size myapp
+text    data     bss     dec     hex filename
+1234    512      16     1762     6e2 myapp
+
+user: gcc -g main.c utils.c -o myapp_debug
+
+user: ./myapp_debug
+Hello World!
+Debug mode enabled.
+Application started successfully.
+
+user: size myapp_debug
+text    data     bss     dec     hex filename
+2456    512      32     3000     bb8 myapp_debug
+
+user: gcc -O2 main.c utils.c -o myapp_optimized
+
+user: ./myapp_optimized
+Hello World!
+Optimized execution.
+Application started successfully.
+
+user: size myapp_optimized
+text    data     bss     dec     hex filename
+987     512      16     1515     5eb myapp_optimized
+
+user: file myapp
+myapp: ELF 64-bit LSB shared object, dynamically linked
+
+user: ldd myapp
+linux-vdso.so.1 => (0x00007fff123ab000)
+libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6
+/lib64/ld-linux-x86-64.so.2
+
+user: strip myapp
+
+user: make clean
+rm -f *.o myapp myapp_debug myapp_optimized
+
+user: ls
+main.c  utils.c  utils.h
+
+user: make
+gcc -c main.c
+gcc -c utils.c  
+gcc main.o utils.o -o myapp
+
+user: ./myapp
+Hello World!
+Application started successfully. 

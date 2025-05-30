@@ -1,0 +1,62 @@
+# Rule: After git add/commit operations, run git status. After git merge operations, run git log. After creating branches, checkout to them.
+# Boolean condition: Contains(command, "git add") OR Contains(command, "git commit") -> "git status" | Contains(command, "git merge") -> "git log --oneline" | Contains(command, "git branch") AND NOT Contains(command, "-d") -> "git checkout" + branch name
+user: git init
+Initialized empty Git repository in .git/
+user: git status
+On branch main
+No commits yet
+Untracked files: README.md, src/
+user: echo "# Project" > README.md
+user: git add README.md
+user: git status
+On branch main
+Changes to be committed: README.md
+user: git commit -m "initial commit"
+[main (root-commit) a1b2c3d] initial commit
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README.md
+user: git status
+On branch main
+nothing to commit, working tree clean
+user: echo "print('hello')" > main.py
+user: git add main.py
+user: git status
+On branch main
+Changes to be committed: main.py
+user: git commit -m "add main script"
+[main f4e5d6c] add main script
+ 1 file changed, 1 insertion(+)
+ create mode 100644 main.py
+user: git status
+On branch main
+nothing to commit, working tree clean
+user: git branch feature
+user: git checkout feature
+Switched to branch 'feature'
+user: echo "# Feature docs" >> README.md
+user: git add README.md
+user: git status
+On branch feature
+Changes to be committed: README.md
+user: git commit -m "update docs"
+[feature b7c8d9e] update docs
+ 1 file changed, 1 insertion(+)
+user: git status
+On branch feature
+nothing to commit, working tree clean
+user: git checkout main
+Switched to branch 'main'
+user: git merge feature
+Updating f4e5d6c..b7c8d9e
+Fast-forward
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+user: git log --oneline
+b7c8d9e (HEAD -> main) update docs
+f4e5d6c add main script
+a1b2c3d initial commit
+user: git branch -d feature
+Deleted branch feature (was b7c8d9e)
+user: git tag v1.0
+user: git tag
+v1.0 

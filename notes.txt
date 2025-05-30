@@ -1,0 +1,42 @@
+# PAPER OUTLINE
+introduction
+
+methodology:
+Overall solution: enumerate a program that can fit all entries seen so far in a shell session, then run it to predict the next shell session
+Problems:
+dang enumerating takes forever when you need to write a program to match 40 entries
+- big tech, take inspiration from the divide-and-conquer approach in the eusolver paper
+- divide the problem into four phases:
+  - for each command in the log, find the space of all possible programs that can generate the next command from previous commands and outputs
+  - find a minimal covering set of programs that can generate all the commands in the log
+  - generate predicates that can be used to select between programs 
+  - combine the programs and predicates into a single switch statement that can generate the next command from previous commands and outputs
+dang enumerating takes forever when inputs are very large / there's a big decision space of potential primitives
+- only use the last command + output for prediction
+- only use space-separated words in the previous command + output for generating terms and predicates
+some entries might be mutually contradictory or unmatchable!
+- yeah no good way to handle this, currently just use the most recent one and discard the rest
+some entries are still unpredictable ...
+- also no good way to handle this either
+dang these programs are fragile
+- work on feature engineering to reward more robust programs
+  - reward number expressions over literals
+
+benchmarking:
+collected logfiles recording shell output from friends
+unfortunately the logfiles were unusably messy because im bad at coding wcyd, were also too fragmented, outputs were too large, or didn't have any discernable logic to them (decisions predicated on information not captured)
+wrote 3 sample shell logs manually, used a large language model to generate 15 more logs based on the logfiles and manually verified that they seemed representative (follow some patterns, but messy + not guaranteed)
+simulate executing commands, then generating a program + predicting an output for the next command at each step
+only try predict "predictable" commands, which we estimate by using a heuristic
+commands after the first 2 which can be composed out of numbers, previous inputs, and previous outputs (so theoretically doable using the current algorithm w/ all substrings of all previous commands + outputs)
+
+results:
+actually this is kinda goated
+39/128 = 30.47% of predictable commands predicted on average, which is 60% of the theoretical bound?
+
+next steps:
+better feature engineering? what literals, what scores
+- dynamically determine relevant literals
+- find some way to distinguish between strings that should be constant vs strings that should be variables
+make this run faster / more performant
+maybe something with embedding models, clustering? based on the last input / output, find similar input / output pairs, then you only need to write a program to distinguish between those instead of finding something that's robust over everything?

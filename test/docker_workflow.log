@@ -1,0 +1,64 @@
+# Rule: After docker build, check images. After docker run, check containers with ps. After docker stop, run docker build again.
+# Boolean condition: Contains(command, "docker build") -> "docker images" | Contains(command, "docker run") -> "docker ps" | Contains(command, "docker stop") -> "docker build"
+user: docker build -t myapp:v1 .
+Step 1/3 : FROM node:16-alpine
+Step 2/3 : WORKDIR /app
+Step 3/3 : COPY . .
+Successfully built abc123def456
+Successfully tagged myapp:v1
+user: docker images
+REPOSITORY   TAG       IMAGE ID       SIZE
+myapp        v1        abc123def456   125MB
+node         16-alpine 9b8eb8c2e6cd   117MB
+user: docker run -d -p 3000:3000 myapp:v1
+container_id_001
+user: docker ps
+CONTAINER ID   IMAGE      STATUS         PORTS
+container_id_001   myapp:v1   Up 2 seconds   0.0.0.0:3000->3000/tcp
+user: curl localhost:3000
+{"status": "ok", "version": "1.0"}
+user: docker logs container_id_001
+Server started on port 3000
+Application ready
+user: docker stop container_id_001
+container_id_001
+user: docker build -t myapp:v2 .
+Step 1/3 : FROM node:16-alpine
+ ---> Using cache
+Step 2/3 : WORKDIR /app
+ ---> Using cache  
+Step 3/3 : COPY . .
+Successfully built def456ghi789
+Successfully tagged myapp:v2
+user: docker images
+REPOSITORY   TAG       IMAGE ID       SIZE
+myapp        v2        def456ghi789   125MB
+myapp        v1        abc123def456   125MB
+node         16-alpine 9b8eb8c2e6cd   117MB
+user: docker run -d -p 3000:3000 myapp:v2
+container_id_002
+user: docker ps
+CONTAINER ID   IMAGE      STATUS         PORTS
+container_id_002   myapp:v2   Up 1 second    0.0.0.0:3000->3000/tcp
+user: curl localhost:3000
+{"status": "ok", "version": "2.0"}
+user: docker stop container_id_002
+container_id_002
+user: docker system prune -f
+Deleted Containers:
+container_id_001
+container_id_002
+Total reclaimed space: 45MB
+user: docker images
+REPOSITORY   TAG       IMAGE ID       SIZE
+myapp        v2        def456ghi789   125MB
+myapp        v1        abc123def456   125MB
+node         16-alpine 9b8eb8c2e6cd   117MB
+user: docker build -t myapp:v3 .
+Step 1/3 : FROM node:16-alpine
+ ---> Using cache
+Step 2/3 : WORKDIR /app
+ ---> Using cache
+Step 3/3 : COPY . .
+Successfully built ghi789jkl012
+Successfully tagged myapp:v3 

@@ -1,41 +1,64 @@
+# Rule: After failed tests, edit the solution file. After successful tests, move to the next question.
+# Boolean condition: Contains(output, "failed") -> "nano solution.py" | Contains(output, "successful") -> "python autograder.py -q " + next question number
+
 user: python autograder.py -q 1
 test 1 failed
-total points: 0
+expected: 42, got: 0
+total points: 0/1
+
+user: nano solution.py
 
 user: python autograder.py -q 1
 test 1 successful
-total points: 1
+total points: 1/1
 
 user: python autograder.py -q 2
 test 2 failed
-total points: 0
+expected: [1,2,3], got: []
+total points: 0/1
+
+user: nano solution.py
 
 user: python autograder.py -q 2
 test 2 successful
-total points: 1
+total points: 1/1
 
 user: python autograder.py -q 3
-test 3.1 failed
-test 3.2 failed
-total points: 0
+test 3 failed
+expected: {"name": "Alice"}, got: None
+total points: 0/1
+
+user: nano solution.py
 
 user: python autograder.py -q 3
-test 3.1 successful
-test 3.2 failed
-total points: 1
+test 3 successful
+total points: 1/1
 
-user: python autograder.py -q 3
-test 3.1 successful
-test 3.2 successful
-total points: 2
+user: python autograder.py -q 4
+test 4 failed
+expected: 120, got: 1
+total points: 0/1
+
+user: nano solution.py
 
 user: python autograder.py -q 4
 test 4 successful
-total points: 1
+total points: 1/1
 
 user: python autograder.py -q 5
-test 4 successful
-total points: 1
+test 5 failed
+expected: "hello world", got: ""
+total points: 0/1
+
+user: nano solution.py
+
+user: python autograder.py -q 5
+test 5 successful
+total points: 1/1
+
+user: python autograder.py --summary
+Total score: 5/5
+All tests passed!
 
 
 

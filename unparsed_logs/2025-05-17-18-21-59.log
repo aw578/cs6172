@@ -1,20 +1,0 @@
-Script started on 2025-05-17 18:21:59-04:00 [TERM="xterm-256color" TTY="/dev/pts/3" COLUMNS="201" LINES="10"]
-]0;nya1025@DESKTOP-C2SGU4R: ~/cs6120[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/cs6120[00m$ git add .
-]0;nya1025@DESKTOP-C2SGU4R: ~/cs6120[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/cs6120[00m$ gi [Kt commit -m "update gb[Kvn [K post"
-[2025sp 55f632d] update gvn post
- 1 file changed, 5 insertions(+), 6 deletions(-)
-]0;nya1025@DESKTOP-C2SGU4R: ~/cs6120[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/cs6120[00m$ git pull
-Enter passphrase for key '/home/nya1025/.ssh/normal_id': 
-Current branch 2025sp is up to date.
-]0;nya1025@DESKTOP-C2SGU4R: ~/cs6120[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/cs6120[00m$ git push
-Enter passphrase for key '/home/nya1025/.ssh/normal_id': 
-Enumerating objects: 11, done.
-Counting objects:   9% (1/11)Counting objects:  18% (2/11)Counting objects:  27% (3/11)Counting objects:  36% (4/11)Counting objects:  45% (5/11)Counting objects:  54% (6/11)Counting objects:  63% (7/11)Counting objects:  72% (8/11)Counting objects:  81% (9/11)Counting objects:  90% (10/11)Counting objects: 100% (11/11)Counting objects: 100% (11/11), done.
-Delta compression using up to 16 threads
-Compressing objects:  16% (1/6)Compressing objects:  33% (2/6)Compressing objects:  50% (3/6)Compressing objects:  66% (4/6)Compressing objects:  83% (5/6)Compressing objects: 100% (6/6)Compressing objects: 100% (6/6), done.
-Writing objects:  16% (1/6)Writing objects:  33% (2/6)Writing objects:  50% (3/6)Writing objects:  66% (4/6)Writing objects:  83% (5/6)Writing objects: 100% (6/6)Writing objects: 100% (6/6), 1.12 KiB | 1.12 MiB/s, done.
-Total 6 (delta 4), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas:   0% (0/4)[Kremote: Resolving deltas:  25% (1/4)[Kremote: Resolving deltas:  50% (2/4)[Kremote: Resolving deltas:  75% (3/4)[Kremote: Resolving deltas: 100% (4/4)[Kremote: Resolving deltas: 100% (4/4), completed with 4 local objects.[K
-To github.com:aw578/cs6120.git
-   2f8cd51..55f632d  2025sp -> 2025sp
-]0;nya1025@DESKTOP-C2SGU4R: ~/cs6120[01;32mnya1025@DESKTOP-C2SGU4R[00m:[01;34m~/cs6120[00m$ 

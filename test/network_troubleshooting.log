@@ -1,0 +1,103 @@
+# Rule: After successful connectivity tests, check network configuration. After failed connections, try alternative hosts or ping.
+# Boolean condition: Contains(command, "ping") AND NOT Contains(output, "unreachable") -> "netstat" | Contains(command, "curl") AND Contains(output, "timeout") -> "ping" + same host | Contains(command, "netstat") -> "ifconfig"
+
+user: ping google.com -c 3
+PING google.com (142.250.191.14) 56(84) bytes of data.
+64 bytes from 142.250.191.14: icmp_seq=1 ttl=115 time=12.4 ms
+64 bytes from 142.250.191.14: icmp_seq=2 ttl=115 time=11.8 ms
+64 bytes from 142.250.191.14: icmp_seq=3 ttl=115 time=12.1 ms
+--- google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss
+
+user: netstat -tuln | grep :80
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN
+tcp6       0      0 :::80                   :::*                    LISTEN
+
+user: ifconfig
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.100  netmask 255.255.255.0  broadcast 192.168.1.255
+        ether 02:42:ac:11:00:02  txqueuelen 0  (Ethernet)
+
+user: ping 8.8.8.8 -c 2
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=8.4 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=117 time=8.1 ms
+--- 8.8.8.8 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss
+
+user: netstat -rn
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+0.0.0.0         192.168.1.1     0.0.0.0         UG        0 0          0 eth0
+192.168.1.0     0.0.0.0         255.255.255.0   U         0 0          0 eth0
+
+user: ifconfig
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.100  netmask 255.255.255.0  broadcast 192.168.1.255
+        ether 02:42:ac:11:00:02  txqueuelen 0  (Ethernet)
+
+user: curl --connect-timeout 5 http://unreachable-host.com
+curl: (28) Connection timed out after 5001 milliseconds
+
+user: ping unreachable-host.com -c 2
+ping: unreachable-host.com: Name or service not known
+
+user: curl --connect-timeout 5 http://slow-server.com
+curl: (28) Connection timed out after 5001 milliseconds
+
+user: ping slow-server.com -c 2
+PING slow-server.com (203.0.113.50) 56(84) bytes of data.
+Request timeout for icmp_seq 1
+Request timeout for icmp_seq 2
+--- slow-server.com ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss
+
+user: nslookup google.com
+Server:         8.8.8.8
+Address:        8.8.8.8#53
+
+Non-authoritative answer:
+Name:   google.com
+Address: 142.250.191.14
+
+user: curl -I http://google.com
+HTTP/1.1 301 Moved Permanently
+Location: http://www.google.com/
+Content-Type: text/html; charset=UTF-8
+Date: Sun, 15 Oct 2023 14:30:25 GMT
+
+user: traceroute google.com | head -n 5
+traceroute to google.com (142.250.191.14), 30 hops max, 60 byte packets
+ 1  gateway (192.168.1.1)  1.245 ms  1.123 ms  1.089 ms
+ 2  10.0.0.1 (10.0.0.1)  8.456 ms  8.234 ms  8.123 ms
+ 3  203.0.113.1 (203.0.113.1)  15.234 ms  15.123 ms  14.987 ms
+
+user: ss -tuln | grep :443
+tcp   LISTEN 0      128          0.0.0.0:443        0.0.0.0:*
+tcp   LISTEN 0      128             [::]:443           [::]:*
+
+user: wget -q --spider http://example.com && echo "Site reachable" || echo "Site down"
+Site reachable
+
+user: dig google.com +short
+142.250.191.14
+
+user: iptables -L | head -n 5
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED
+ACCEPT     all  --  anywhere             anywhere
+DROP       all  --  anywhere             anywhere             ctstate INVALID
+
+user: ip route show | head -n 3
+default via 192.168.1.1 dev eth0 proto dhcp metric 100
+169.254.0.0/16 dev eth0 scope link metric 1000
+192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.100 metric 100
+
+user: nc -zv google.com 80
+Connection to google.com 80 port [tcp/http] succeeded!
+
+user: systemctl status networking
+* networking.service - Raise network interfaces
+   Loaded: loaded (/lib/systemd/system/networking.service; enabled; vendor preset: enabled)
+   Active: active (exited) since Sun 2023-10-15 14:25:00 UTC; 1h 5min ago 

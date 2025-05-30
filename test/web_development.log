@@ -1,0 +1,47 @@
+# Rule: After installing packages, start the application. After starting servers, test with curl localhost.
+# Boolean condition: Contains(command, "npm install") AND NOT Contains(command, "--save-dev") -> "npm start" | Contains(command, "npm start") OR Contains(output, "Server running") -> "curl localhost"
+
+user: npm init -y
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {"start": "node index.js", "test": "jest"},
+  "license": "ISC"
+}
+
+user: npm install express
+added 50 packages in 2s
+
+user: npm start
+Server running on port 3000
+
+user: curl localhost:3000
+Cannot GET /
+
+user: npm install lodash
+added 5 packages in 1s
+
+user: npm start
+Server running on port 3000
+
+user: curl localhost:3000
+{"msg":"hello","data":[1,2,3]}
+
+user: npm install morgan
+added 8 packages in 1s
+
+user: npm start
+Server running on port 3000
+Morgan middleware loaded
+
+user: curl localhost:3000
+{"msg":"hello","timestamp":"2023-10-15T14:30:00Z"}
+
+user: npm install --save-dev jest
+added 15 packages in 1s
+
+user: npm test
+PASS ./app.test.js
+basic (2 ms)
+Tests: 1 passed, 1 total 
