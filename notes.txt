@@ -1,42 +1,144 @@
 # PAPER OUTLINE
+
 introduction
+general motivation: 
+Command-line interfaces have been a core part of computing for decades, but autocorrect functionality for shell commands is still underdeveloped.
+Currently, the Linux shell has no autocorrect functionality, but allows users to access their command history with the arrow keys.
+This has the advantage of being simple and fast, but is very limited in its predictive power.
+Although shell usage is highly patterned, it is still slightly more complex than the arrow key approach assumes.
+On the other hand, large language models are able to use context and understand command semantics to predict the next command.
+However, LLMs are either slow (if locally run) or expensive (if cloud-based).
+We propose a new approach to next-command prediction that uses system-guided synthesis to take advantage of patterns in shell usage while being more efficient than LLMs and more accurate than the arrow key approach.
 
-methodology:
-Overall solution: enumerate a program that can fit all entries seen so far in a shell session, then run it to predict the next shell session
-Problems:
-dang enumerating takes forever when you need to write a program to match 40 entries
-- big tech, take inspiration from the divide-and-conquer approach in the eusolver paper
-- divide the problem into four phases:
-  - for each command in the log, find the space of all possible programs that can generate the next command from previous commands and outputs
-  - find a minimal covering set of programs that can generate all the commands in the log
-  - generate predicates that can be used to select between programs 
-  - combine the programs and predicates into a single switch statement that can generate the next command from previous commands and outputs
-dang enumerating takes forever when inputs are very large / there's a big decision space of potential primitives
-- only use the last command + output for prediction
-- only use space-separated words in the previous command + output for generating terms and predicates
-some entries might be mutually contradictory or unmatchable!
-- yeah no good way to handle this, currently just use the most recent one and discard the rest
-some entries are still unpredictable ...
-- also no good way to handle this either
-dang these programs are fragile
-- work on feature engineering to reward more robust programs
-  - reward number expressions over literals
 
-benchmarking:
-collected logfiles recording shell output from friends
-unfortunately the logfiles were unusably messy because im bad at coding wcyd, were also too fragmented, outputs were too large, or didn't have any discernable logic to them (decisions predicated on information not captured)
-wrote 3 sample shell logs manually, used a large language model to generate 15 more logs based on the logfiles and manually verified that they seemed representative (follow some patterns, but messy + not guaranteed)
-simulate executing commands, then generating a program + predicting an output for the next command at each step
-only try predict "predictable" commands, which we estimate by using a heuristic
-commands after the first 2 which can be composed out of numbers, previous inputs, and previous outputs (so theoretically doable using the current algorithm w/ all substrings of all previous commands + outputs)
+Related Work:
+Davidson and Hirsh 1997 uses a decision-tree predictor to predict command stubs by generating a decision tree from a log of command usage to predict the next command given the previous command.
+Korvemaker and Greiner 2000 uses a similar approach, but uses additional features like the error code, parsed templates, and the second-most-recent command.
+Both of 
 
-results:
-actually this is kinda goated
-39/128 = 30.47% of predictable commands predicted on average, which is 60% of the theoretical bound?
 
-next steps:
-better feature engineering? what literals, what scores
-- dynamically determine relevant literals
-- find some way to distinguish between strings that should be constant vs strings that should be variables
-make this run faster / more performant
-maybe something with embedding models, clustering? based on the last input / output, find similar input / output pairs, then you only need to write a program to distinguish between those instead of finding something that's robust over everything?
+
+Early research showed that user command histories contain exploitable patterns. Even without understanding command semantics, simple learning methods can predict the next command fairly well by recognizing recurring sequences
+cse.lehigh.edu
+. For example, Davison and Hirsh collected thousands of shell commands from dozens of users and found that a decision-tree predictor (C4.5) using the two previous commands could guess the next command (ignoring arguments) up to 45% of the time
+cse.lehigh.edu
+. Similarly, Korvemaker and Greiner’s adaptive shell interface reached nearly 50% accuracy in next-command prediction across users
+cdn.aaai.org
+. These systems treated the shell as a sequence of tokens and applied machine learning (e.g. Markov models, decision trees, mixtures of experts) to learn user-specific patterns from history. Notably, Davison and Hirsh observed that even such “knowledge-free” predictors can save ~30% of keystrokes, and suggested that adding domain-specific knowledge (e.g. command semantics or output context) could further improve accuracy
+cse.lehigh.edu
+. This hints that more symbolic reasoning about the command sequence might yield better predictions than purely statistical methods.
+
+One limitation of the early predictors is that they typically used only the sequence of command names (and perhaps simple state like working directory or time) to predict the next command. They did not leverage the content of command outputs. In practice, however, shell usage often involves reading the output of one command and then issuing a follow-up command based on that output. For instance, a user might ls a directory, see a filename, then vim that file; or encounter an error message and then run a corrective command. Incorporating such input-output dependencies requires more symbolic analysis. Indeed, Greiner’s work noted that it’s difficult to exceed ~50% accuracy without deeper insight, since user behavior can switch contexts or goals unpredictably
+cdn.aaai.org
+. This motivates approaches that go beyond n-grams and instead analyze the structure and semantics of command interactions.
+Symbolic Program Synthesis Approaches
+
+Recent work and proposals suggest treating the next-command prediction problem as a program synthesis task: given the previous commands and their outputs as examples, synthesize a program (i.e. the next command) that fits the observed pattern. This is analogous to Microsoft’s FlashFill in spreadsheets, which infers a string transformation from input-output examples
+mgree.github.io
+. Instead of raw machine learning over tokens, a synthesizer can leverage a domain-specific language (DSL) of transformations to generate candidate commands consistent with the prior output. For example, Deepak Raghavan et al. (HotOS’21 panel) posited that input-output example techniques like FlashFill could “automate shell invocations given a set of example input-output pairs”
+mgree.github.io
+– essentially, learn how one command’s output maps to the next command. The challenge is ensuring the synthesized command is correct and safe, but the approach promises a more accurate, semantics-aware suggestion than blind statistical prediction.
+
+related work:
+basically all the papers, but in more detail
+
+Methodology:
+Our overall solution is to encode the next-command prediction problem as a system-guided synthesis (SyGuS) problem.
+We do this by writing a DSL for building shell commands from previous commands and their outputs, then encoding commands as input points (previous commands, previous outputs, next command) to restrain the semantics.
+After specifying the constraints, we enumerate all potential templates until we find one that can fit all entries seen so far in a shell session, then run it to predict the next shell session.
+
+The first and largest problem with this naive approach is that it is too slow.
+As the number of entries in the shell session grows, the program size grows linearly, which results in an exponential increase in the time it takes to find a correct program through enumeration.
+To solve this, we take inspiration from the divide-and-conquer approach in Alur et al. (2017).
+This paper notes that although the full solution might be too large to feasibly enumerate, many problems can be decomposed into the smaller problem of learning a set of terms that collectively cover every example, then learning a decision tree over the terms.
+We apply this idea to our problem by first generating a template for each command using enumeration, then generating predicates to select between templates.
+We then combine the templates and predicates into a single decision tree that can generate the next command from previous commands and outputs.
+By doing this, we can reduce the largest program size from over 100 to 10, which is a significant improvement.
+
+Our algorithm also leverages the specific structure of the problem for further optimizations.
+Firstly, we can easily enumerate all possible templates for a command by further breaking down the problem and generating a template for each individual word in the command.
+This lets us further reduce the program size, as we only need to enumerate templates for each word in the command instead of the entire command.
+After generating the templates, we can then use a greedy set cover algorithm to find a minimal covering set of expressions that can generate all the commands in the log combined.
+This step improves robustness by rewarding more general-purpose templates over templates that are specific to one command.
+When done correctly, it also biases the predicate search to learn more useful and generalizable predicates.
+When generating the predicates and decision tree, we also use the problem structure to our advantage.
+As most programs take the form of switch statements over the templates, we can independently generate predicates for each template instead of generating a single decision tree for the entire program.
+
+In addition to algorithmic improvements, feature engineering was the most important part of this project.
+The space of possible literals / programs is very large, which makes it difficult to find a good program to predict the next command.
+We address this by manually identifying the most relevant literals, which we then pass into the synthesizer.
+For example, we only use the last command and output for prediction, as it is the most relevant part of the shell session.
+Doing this lets us reduce the program space significantly.
+In addition, we only use space-separated words as constants and word indexes as variables for term generation, as this is the most common pattern in shell usage.
+Finally, we also add special number handling by identifying numbers in the shell log, using them as constants, and building expressions out of them.
+Our final algorithm is as follows:
+
+
+Unfortunately, reducing the program space by this much means that some programs are no longer learnable.
+For example, only using the last command + output for prediction means that some entries might be mutually contradictory.
+If "explorer.exe <filename>" is sometimes followed by "cat <filename>" and sometimes by "echo <filename>", then the synthesizer will not be able to learn this pattern.
+To address this, we currently discard all mutually contradictory entries except the most recent one, which results in a loss of information.
+We also tried using the second-most-recent command and output to distinguish between entries where the most recent command and output are the same.
+Due to performance limitations, we did not pursue this in the final implementation, but it should theoretically result in better accuracy.
+The programs our algorithm generates are often fragile, as they often fail to generalize or depend on matching specific artifacts of the input and output.
+We attempt to address this by selecting literals that are more likely to be useful for generalization, but our solution is far from perfect.
+Especially in cases where the current options are insufficient or there are few examples, the synthesizer will often generate hardcoded programs.
+For example, if a command is not space-separated, then the synthesizer will not be able to learn it.
+We tried to address this by adding a "word" type, but this was difficult to implement and resulted in a more complex algorithm.
+Finally, some entries are still inherently unpredictable, even with a perfect synthesizer.
+If the next command cannot be built from previous commands and outputs, then it is inherently unpredictable by program synthesis tools.
+We currently ignore these cases, but this is a promising area for using LLMs for prediction.
+
+
+### Benchmarking:
+
+#### Dataset:
+
+Following the approach in prior works (Davidson et al., 1997), we captured command histories from 5 friends to serve as our test dataset. 
+However, beyond just recording the commands, we also recorded the output of the commands, which we hoped would provide more information to the synthesizer.
+Unfortunately, we ran into significant problems when trying to use the recorded outputs.
+Due to coding errors, the logfiles could not be played back, although some information was retained. 
+Beyond this, the logfiles were unsuited for the synthesis task, as they didn't have any discernable logic to them. 
+In many cases, the decisions were predicated on information that was not recorded, like visual output or the current open project.
+Instead, we decided to use a combination of manually written and LLM-generated shell logs.
+We wrote 3 sample shell logs manually that reflected some common patterns, and used a large language model to generate 15 more logs based on the logfiles. 
+After generating the logs, we manually verified that they were representative before using them for evaluation.
+
+#### Evaluation:
+
+To evaluate our algorithm, we used the shell logs to simulate executing commands. 
+After executing each command, we then generated a program and used it to predict an output for the next command.
+To evaluate the performance of our algorithm, we compared the predicted output to the actual output of the next command.
+We've recorded the percentage of all predicted commands, as well as the percentage of commands that were possible to predict (which we estimate by using a heuristic).
+In our implementation, we assume that predictable commands occur after the first 2 and are composed  of numbers, previous inputs, and previous outputs. 
+In other words, predictable commands are the commands that could be found using the current algorithm if it were given all substrings of all previous commands and outputs.
+
+#### Baseline Performance:
+
+We take inspiration from Korvemaker and Greiner, 2000 to estimate the baseline performance of our algorithm.
+In their work, they predict full commands from a combination of base frequencies, frequencies conditioned on the previous command, and parsed command templates.
+They found that their algorithm was able to predict around 48% of commands and 48% / 72% = 66.6% of predictable commands.
+However, they used longer-term profiles of over 1700 commands per user.
+In addition, their definition of predictable commands is less strict than ours, as in their case, a command is unpredictable if it has never been seen before, while we include commands that can be generated from previous commands and outputs as well.
+As a result, we expect our performance to be lower than theirs.
+
+### Results:
+
+Our algorithm was able to predict 39/128 = 30.47% of predictable commands and 39/362 = 10.77% of all commands on average.
+Although this is somewhat low, we think that this is understandable, given that the algorithm has access to only 1-3% of the information of the baseline implementation and is still very unoptimized. 
+In addition, our dataset clearly has fewer predictable commands as a percentage of total commands, which artificially lowers the performance across all commands.
+Regardless, we think that this is a promising approach, especially as a single expert in a mixture-of-experts model.
+
+### Next Steps:
+
+One of the largest improvements we could make would be better feature engineering.
+Right now, we use a pretty unoptimized subset of the possible program space, and finding better ways to spend our compute budget would result in much better performance.
+One promising improvement would be to more accurately identify relevant literals.
+Right now, we assume that a substring is relevant iff it is a number or a space-separated word in the previous command or output.
+We could improve this by identifying relevant non-space-separated words or removing irrelevant words from the predicate and term generation.
+Performance is also very low right now, so making the algorithm faster would also be helpful, both by reducing the amount of time spent generating programs and by allowing more literals and operators to be used.
+Finally, one approach we initially considered but did not pursue was using embedding models to cluster similar input-output-input tuples.
+After clustering, we could generate one program per cluster and match the current command to the closest cluster, which would simplify predicate generation.
+As predicate generation is the most time-consuming part of the algorithm, this would result in a significant speedup.
+
+# Conclusion

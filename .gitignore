@@ -10,3 +10,4 @@ __pycache__/
 unparsed_logs/
 parsed_logs/
 cleaned_logs/
+notes.txt
